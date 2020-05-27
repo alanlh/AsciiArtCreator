@@ -1,0 +1,197 @@
+#displayContainer {
+  left: 0; 
+  top: 0;
+  display: inline-block;
+  float: left;
+  white-space: nowrap;
+}
+
+#displayScreen {
+  left: 0;
+  top: 0;
+  display: inline-block;
+  margin-left: 2vw;
+}
+
+#menuBuffer {
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 30vw;
+  display: inline-block;
+}
+
+#menuScreen {
+  top: 0;
+  right: 0; 
+  position: fixed; 
+  background-color: rgb(216, 224, 224);
+  height: 100vh;
+  width: 30vw;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  display: block;
+}
+
+#menuHeader {
+  display: block;
+  background-color: rgb(184, 192, 192);
+  height: auto;
+}
+
+#title {
+  padding-right: 2vw;
+  padding-left: 2vw;
+  padding-top: 2vh;
+  padding-bottom: 2vh;
+  width: 80%;
+  position: relative;
+  display: block;
+  margin: 0;
+}
+
+#menuTabs {
+  display: flex;
+  position: relative;
+}
+
+.menuTab {
+  background-color: rgb(184, 192, 192);
+  width: 50%;
+  padding: 5px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.menuTab:hover {
+  background-color: rgb(200, 208, 208);
+}
+
+.menuTab:active {
+  background-color: rgb(232, 240, 240);
+}
+
+.menuTab.activeTab {
+  background-color: rgb(216, 224, 224);
+  cursor: default;
+  font-weight: bold;
+}
+
+#spriteViewTab {
+  flex: 50%;
+}
+
+#componentViewTab {
+  flex: 50%;
+}
+
+.menuBody {
+  display: block;
+  width: 100%;
+  margin: 5px;
+}
+
+#componentViewBody {
+  
+}
+
+#spriteViewBody {
+  display: none;
+}
+
+.menuSection {
+  padding: 5px;
+}
+
+.menuSectionTitle {
+  padding-top: 0.5vh;
+  padding-bottom: 0.5vh;
+  margin: 0;
+}
+
+.loadingSection {
+  margin-top: 5px;
+  margin-left: 5px;
+  margin-right: 5px;
+  display: flex;
+  flex-direction: row;
+}
+
+.loadButton {
+  padding: 5px;
+  width: 33%;
+  margin: 5px;
+}
+
+.menuSectionBody {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.menuSectionColumn {
+  padding: 5px;
+  display: block;
+}
+
+.menuSectionLeft {
+  flex: 1 1 45%;
+}
+
+.menuSectionRight {
+  flex: 1 1 55%;
+}
+
+.menuSectionBlock {
+  padding: 2px;
+}
+
+ul.selectorList {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  background-color: rgb(240, 240, 240);
+  overflow: scroll;
+  white-space: nowrap;
+  width: 12vw;
+}
+
+ul.selectorList.componentList {
+  max-height: 25vh;
+  min-height: 15vh;
+}
+
+ul.selectorList.spriteList {
+  min-height: 25vh;
+  max-height: 50vh;
+}
+
+input {
+  border: none;
+  margin: 4px 0px;
+}
+
+input[type=number].coord {
+  width: 50px;
+}
+
+button.menuButton {
+  border: none;
+  padding: 5px;
+  margin: 2px;
+  background-color: rgb(184, 192, 192);
+  cursor: pointer;
+}
+
+button.menuButton:hover {
+  background-color: rgb(200, 208, 208);
+}
+
+button.menuButton:active {
+  background-color: rgb(232, 240, 240);
+}
+
+.styleOption {
+  float: left;
+}

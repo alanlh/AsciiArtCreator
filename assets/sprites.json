@@ -1,0 +1,21 @@
+{
+  "sprites": {
+    "blankSprite": {
+      "text": " ",
+      "settings": {
+        "spaceIsTransparent": false
+      }
+    }
+  },
+  "styles": {
+    "emptyStyle": {
+      
+    },
+    "blankHoverStyle": {
+      "backgroundColor": "#cccccc"
+    },
+    "cursorStyle": {
+      "backgroundColor": "#cccccc"
+    }
+  }
+}

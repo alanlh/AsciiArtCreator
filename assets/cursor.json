@@ -1,0 +1,14 @@
+{
+  "sprite-cursor": {
+    "default": {
+      "spriteNameList": ["blankSprite"],
+      "styleNameList": ["cursorStyle"],
+      "relativePositionList": [[0, 0, 0]]
+    },
+    "blink": {
+      "spriteNameList": ["blankSprite"],
+      "styleNameList": ["emptyStyle"],
+      "relativePositionList": [[0, 0, 0]]
+    }
+  }
+}
