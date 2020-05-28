@@ -147,22 +147,34 @@
   padding: 2px;
 }
 
-ul.selectorList {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
+.selectorList {
   background-color: rgb(240, 240, 240);
   overflow: scroll;
   white-space: nowrap;
+  margin: 0;
+  padding: 0;
+}
+
+ul.selectorList {
+  list-style-type: none;
   width: 12vw;
 }
 
-ul.selectorList.componentList {
+table.selectorList {
+  width: 24vw;
+}
+
+.selectorListElement:hover {
+  background-color: rgb(200, 200, 200);
+  cursor: pointer;
+}
+
+.selectorList.componentList {
   max-height: 25vh;
   min-height: 15vh;
 }
 
-ul.selectorList.spriteList {
+.selectorList.spriteList {
   min-height: 25vh;
   max-height: 50vh;
 }
@@ -190,6 +202,10 @@ button.menuButton:hover {
 
 button.menuButton:active {
   background-color: rgb(232, 240, 240);
+}
+
+.nameInput {
+  width: 12em;
 }
 
 .styleOption {

@@ -1,11 +1,11 @@
 {
   "sprite-cursor": {
-    "default": {
+    "on": {
       "spriteNameList": ["blankSprite"],
       "styleNameList": ["cursorStyle"],
       "relativePositionList": [[0, 0, 0]]
     },
-    "blink": {
+    "off": {
       "spriteNameList": ["blankSprite"],
       "styleNameList": ["emptyStyle"],
       "relativePositionList": [[0, 0, 0]]
