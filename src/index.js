@@ -1,9 +1,11 @@
-import CursorControllerSystem from "./systems/CursorControllerSystem.js";
+import CursorControllerSystem from "./cursor/CursorControllerSystem.js";
+
 import ArtHolderSystem from "./systems/ArtHolderSystem.js";
 import DisplayHandlerSystem from "./systems/DisplayHandlerSystem.js";
 
-import CursorComponent from "./components/CursorComponent.js";
 import TextCellComponent from "./components/TextCellComponent.js";
+
+const engine = new AsciiEngine.Engine();
 
 async function main() {
   setupUI();
@@ -13,8 +15,6 @@ async function main() {
   
   let agl = new AsciiEngine.GL.Instance("artCreator");
   agl.init(width, height);
-  
-  let engine = new AsciiEngine.Engine();
   
   let keyboardInput = new AsciiEngine.Modules.KeyboardInput();
   let asciiMouseInput = new AsciiEngine.Modules.AsciiMouseInput(agl);
@@ -50,6 +50,7 @@ async function main() {
 }
 
 function setupUI() {
+  // Top tabs for alternating between the component and sprite tab. 
   document.getElementById("componentViewTab").addEventListener("click", (event) => {
     document.getElementById("componentViewBody").style.display = "block";
     document.getElementById("spriteViewBody").style.display = "none";

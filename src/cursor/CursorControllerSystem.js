@@ -1,4 +1,7 @@
-import CursorComponent from "../components/CursorComponent.js";
+import CursorComponent from "./CursorComponent.js";
+import BlinkerComponent from "./BlinkerComponent.js";
+
+import BlinkerSystem from "./BlinkerSystem.js";
 
 export default class CursorControllerSystem extends AsciiEngine.System {
   constructor() {
@@ -19,6 +22,7 @@ export default class CursorControllerSystem extends AsciiEngine.System {
     ));
     this.cursorEntity.setComponent(resourceManager.get("sprite-cursor").construct());
     this.cursorEntity.setComponent(this.cursorComponent);
+    this.cursorEntity.setComponent(new BlinkerComponent(6, 3));
     
     this.getEngine().getEntityManager().requestAddEntity(this.cursorEntity);
     
@@ -33,7 +37,10 @@ export default class CursorControllerSystem extends AsciiEngine.System {
     
     let mouseInputModule = this.getEngine().getModule("MouseInput");
     mouseInputModule.signup(this.name, this.getMessageReceiver());
-    mouseInputModule.subscribe(this.name, mouseInputModule.GLOBAL, ["click"])
+    mouseInputModule.subscribe(this.name, mouseInputModule.GLOBAL, ["click"]);
+    
+    let blinkerSystem = new BlinkerSystem();
+    this.getSystemManager().addSystem(blinkerSystem);
   }
   
   shutdown() {
