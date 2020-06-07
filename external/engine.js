@@ -150,8 +150,7 @@ var AsciiEngine = (function () {
       if (this.hasComponent(type)) {
         return this._components[type];
       }
-      // TODO: Replace with custom logging.
-      console.warn("Entity", id, "does not have component of type ", type);
+      return null;
     }
     
     /**
@@ -723,13 +722,13 @@ var AsciiEngine = (function () {
      * This method can be overriden to fit an alternative data structure.
      * However, failure to implement this correctly may result in undefined behavior.
      */
-    hasEntity(entity) {}
+    has(entity) {}
     
     /**
      * Adds the entity to the system.
      * The implementation should make sense for how the derived system stores its entities.
      */
-    addEntity(entity) {}
+    add(entity) {}
     
     /**
      * Removes the entity from this.entities.
@@ -738,7 +737,7 @@ var AsciiEngine = (function () {
      * Any alternate implementation MUST be defined so that the System no longer processes it.
      * Failure to do so may result in undefined behavior.
      */
-    removeEntity(entity) {}
+    remove(entity) {}
     
     /**
      * A virtual method Systems can override
@@ -903,33 +902,33 @@ var AsciiEngine = (function () {
       for (let system of this) {
         for (let entity of operations.added) {
           if (system.check(entity)) {
-            system.addEntity(entity);
+            system.add(entity);
           }
         }
         
         for (let entity of operations.enabled) {
           if (system.check(entity)) {
-            system.addEntity(entity);
+            system.add(entity);
           }
         }
         
         for (let entity of operations.changed) {
-          if (!system.hasEntity(entity) && system.checkEntity(entity)) {
-            system.addEntity(entity);
-          } else if (systm.hasEntity(entity) && !system.checkEntity(entity)) {
-            system.removeEntity(entity);
+          if (!system.has(entity) && system.check(entity)) {
+            system.add(entity);
+          } else if (system.has(entity) && !system.check(entity)) {
+            system.remove(entity);
           }
         }
         
         for (let entity of operations.disabled) {
-          if (system.hasEntity(entity)) {
-            system.removeEntity(entity);
+          if (system.has(entity)) {
+            system.remove(entity);
           }
         }
         
         for (let entity of operations.deleted) {
-          if (system.hasEntity(entity)) {
-            system.removeEntity(entity);
+          if (system.has(entity)) {
+            system.remove(entity);
           }
         }
       }
@@ -970,8 +969,8 @@ var AsciiEngine = (function () {
       // If the game has already started, then all existing entities need to be registered with the system.
       let entityManager = this.engine.getEntityManager();
       for (let entity of entityManager.entities) {
-        if (system.checkEntity(entity)) {
-          system.addEntity(entity);
+        if (system.check(entity)) {
+          system.add(entity);
         }
       }
     }
@@ -1152,6 +1151,8 @@ var AsciiEngine = (function () {
       this.spriteNameList = spriteNameList || [];
       this.styleNameList = styleNameList || [];
       this.relativePositionList = relativePositionList || [];
+      
+      this.visible = true;
     }
   }
 
@@ -1164,6 +1165,8 @@ var AsciiEngine = (function () {
       this._spriteNameList = {};
       this._styleNameList = {};
       this._relativePositionList = {};
+      
+      this.visible = true;
     }
     
     get currentFrame() {
@@ -1209,7 +1212,7 @@ var AsciiEngine = (function () {
   }
 
   // Utilize the same type so that AsciiRenderSystem recognizes it.
-  AsciiAnimateComponent.type = AsciiRenderComponent.type;
+  AsciiAnimateComponent.type = "AsciiAnimate";
 
   class PositionComponent extends Component {
     constructor(x, y, z) {
@@ -1244,15 +1247,15 @@ var AsciiEngine = (function () {
       this.entities = new Set();
     }
     
-    hasEntity(entity) {
+    has(entity) {
       return this.entities.has(entity);
     }
     
-    addEntity(entity) {
+    add(entity) {
       this.entities.add(entity);
     }
 
-    removeEntity(entity) {
+    remove(entity) {
       this.entities.delete(entity);
     }
   }
@@ -1264,15 +1267,15 @@ var AsciiEngine = (function () {
       this.entities = {};
     }
     
-    hasEntity(entity) {
+    has(entity) {
       return entity.id in this.entities;
     };
     
-    addEntity(entity) {
+    add(entity) {
       this.entities[entity.id] = entity;
     }
     
-    removeEntity(entity) {
+    remove(entity) {
       delete this.entities[entity.id];
     }
   }
@@ -1291,7 +1294,8 @@ var AsciiEngine = (function () {
     
     check(entity) {
       // Need both renderable and position.
-      return entity.hasComponent(AsciiRenderComponent.type)
+      return (entity.hasComponent(AsciiRenderComponent.type) 
+        || entity.hasComponent(AsciiAnimateComponent.type))
         && entity.hasComponent(PositionComponent.type);
     }
     
@@ -1302,7 +1306,10 @@ var AsciiEngine = (function () {
       let resourceManager = this.getEngine().getModule(Engine.ModuleSlots.ResourceManager);
       
       for (let entity of this.entities) {
-        let renderComponent = entity.getComponent(AsciiRenderComponent.type);
+        let renderComponent = entity.getComponent(AsciiRenderComponent.type) || entity.getComponent(AsciiAnimateComponent.type);
+        if (!renderComponent.visible) {
+          continue;
+        }
         let entityAbsolutePosition = this.getEntityAbsolutePosition(entity);
         for (let i = 0; i < renderComponent.spriteNameList.length; i ++) {
           let sprite = resourceManager.get(renderComponent.spriteNameList[i]);

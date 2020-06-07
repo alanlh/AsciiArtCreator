@@ -29,7 +29,7 @@ export default class DisplayHandlerSystem extends AsciiEngine.System {
       entity.hasComponent(FrameComponent.type);
   }
   
-  hasEntity(entity) {
+  has(entity) {
     if (entity.hasComponent(TemplateComponent.type)) {
       return entity.id in this.templates;
     } else if (entity.hasComponent(FrameComponent.type)) {
@@ -38,7 +38,7 @@ export default class DisplayHandlerSystem extends AsciiEngine.System {
     return false;
   }
   
-  addEntity(entity) {
+  add(entity) {
     if (entity.hasComponent(TemplateComponent.type)) {
       this.templates[entity.id] = entity;
     } else if (entity.hasComponent(FrameComponent.type)) {
@@ -46,7 +46,7 @@ export default class DisplayHandlerSystem extends AsciiEngine.System {
     }
   }
   
-  removeEntity(entity) {
+  remove(entity) {
     if (entity.hasComponent(TemplateComponent.type)) {
       delete this.templates[entity.id];
     } else if (entity.hasComponent(FrameComponent.type)) {
