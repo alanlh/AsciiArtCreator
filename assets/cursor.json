@@ -1,13 +1,13 @@
 {
-  "sprite-cursor": {
+  "_#_#_sprite-cursor": {
     "on": {
-      "spriteNameList": ["blankSprite"],
-      "styleNameList": ["cursorStyle"],
+      "spriteNameList": ["_#_#_blankSprite"],
+      "styleNameList": ["_#_#_cursorStyle"],
       "relativePositionList": [[0, 0, 0]]
     },
     "off": {
-      "spriteNameList": ["blankSprite"],
-      "styleNameList": ["emptyStyle"],
+      "spriteNameList": ["_#_#_blankSprite"],
+      "styleNameList": ["_#_#_emptyStyle"],
       "relativePositionList": [[0, 0, 0]]
     }
   }

@@ -1,5 +1,5 @@
-import FrameComponent from "../states/FrameComponent.js";
-import TemplateComponent from "../states/TemplateComponent.js";
+// import FrameComponent from "../data_components/FrameComponent.js";
+// import TemplateComponent from "../data_components/TemplateComponent.js";
 
 export default class DisplayHandlerSystem extends AsciiEngine.System {
   // The system in charge of all templates.

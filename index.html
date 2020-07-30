@@ -19,8 +19,8 @@
       </h1>
       
       <div id="menuTabs">
-        <button class="menuTab activeTab" id="componentViewTab">
-          Components
+        <button class="menuTab activeTab" id="templateViewTab">
+          Templates
         </button>
         
         <button class="menuTab" id="spriteViewTab">
@@ -29,23 +29,25 @@
       </div>
     </div>
     
-    <div id="componentViewBody" class="menuBody">
+    <div id="templateViewBody" class="menuBody">
       <div class="loadingSection">
-        <button id="uploadTemplates" class="menuButton loadButton">Upload</button>
-        
-        <button id="downloadVisibleTemplates" class="menuButton loadButton">Download Visible</button>
-        
-        <button id="downloadAllTemplates" class="menuButton loadButton">Download All</button>
+        <button id="uploadTemplatesButton" class="menuButton loadButton">Upload</button>
+        <input id="uploadTemplates" type="file" class="fileIO"/>
+
+        <button id="downloadSelectedTemplatesButton" class="menuButton loadButton">Download Selected</button>
+        <a id="downloadSelectedTemplates" class="fileIO"/></a>
+        <button id="downloadAllTemplatesButton" class="menuButton loadButton">Download All</button>
+        <a id="downloadAllTemplates" class="fileIO"/></a>
       </div>
       
       <div class="menuSection">
         <h3 class="menuSectionTitle">Components:</h3>
         <div class="menuSectionBody">
           <div class="menuSectionColumn menuSectionLeft">
-            <ul id="componentList" class="selectorList componentList">
-              <li class="selectorListElement">Test Element LONG NAME</li>
-              <li class="selectorListElement">Test Element LONG NAME</li>
-              <li class="selectorListElement">Test Element LONG NAME</li>
+            <ul id="templateList" class="selectorList componentList">
+              <li class="selectorListElement selected used">Test Element LONG NAME</li>
+              <li class="selectorListElement used">Test Element LONG NAME</li>
+              <li class="selectorListElement used">Test Element LONG NAME</li>
               <li class="selectorListElement">Test Element</li>
               <li class="selectorListElement">Test Element</li>
               <li class="selectorListElement">Test Element</li>
@@ -60,18 +62,18 @@
           
           <div class="menuSectionColumn menuSectionRight">
             <div class="menuSectionBlock">
-              <button class="menuButton">New</button>
-              <button class="menuButton">Delete</button>
+              <button id="templateNewButton" class="menuButton">New</button>
+              <button id="templateDeleteButton" class="menuButton">Delete</button>
             </div>
 
             <div class="menuSectionBlock">
-              <input type="text" class="nameInput"></input><br>
-              <button class="menuButton">Rename</button>
+              <input id="templateNameField" type="text" class="nameInput"></input><br>
+              <button id="templateRenameButton" class="menuButton">Rename</button>
             </div>
             
             <div class="menuSectionBlock">
               Visible:
-              <input type="checkbox"></input>
+              <input id="templateVisibleCheckbox" type="checkbox"></input>
             </div>
             
             <div class="menuSectionBlock">
@@ -89,18 +91,17 @@
                 </tr>
                 <tr>
                   <td>
-                    <input type="number" class="coord"></input>
+                    <input id="templateXField" type="number" class="coord"></input>
                   </td>
                   <td>
-                    <input type="number" class="coord"></input>
+                    <input id="templateYField" type="number" class="coord"></input>
                   </td>
                   <td>
-                    <input type="number" class="coord"></input>
+                    <input id="templateZField" type="number" class="coord"></input>
                   </td>
                 </tr>
-                
-                <tr>
               </table>
+              <button id="templatePositionButton" class="menuButton">Move</button>
             </div>
           </div>
         </div>
@@ -116,17 +117,17 @@
           </div>
           <div class="menuSectionColumn menuSectionRight">
             <div class="menuSectionBlock">
-              <button class="menuButton">New</button>
-              <button class="menuButton">Delete</button>
+              <button id="frameNewButton" class="menuButton">New</button>
+              <button id="frameDeleteButton" class="menuButton">Delete</button>
             </div>
             
             <div class="menuSectionBlock">
-              <input type="text" class="nameInput"></input><br>
-              <button class="menuButton">Rename</button>
+              <input id="frameNameField" type="text" class="nameInput"></input><br>
+              <button id="frameRenameButton" class="menuButton">Rename</button>
             </div>
 
             <div class="menuSectionBlock">
-              <button class="menuButton">Set As Active Frame</button>
+              <button id="frameActiveButton" class="menuButton">Set As Active Frame</button>
             </div>
 
           </div>
@@ -134,27 +135,27 @@
       </div>
 
       <div class="menuSection">
-        <h3 class="menuSectionTitle">Sprites:</h3>
+        <h3 class="menuSectionTitle">Fragments:</h3>
         <div class="menuSectionBody">
           <div class="menuSectionColumn menuSectionLeft">
-            <ul id="spriteList" class="selectorList componentList">
+            <ul id="fragmentList" class="selectorList componentList">
               <li><span>Sprite name</span> | <span>Style name</span> | <span>[100, 100, 100]</span></li>
             </ul>
           </div>
           <div class="menuSectionColumn menuSectionRight">
             <div class="menuSectionBlock">
-              <button class="menuButton">New</button>
-              <button class="menuButton">Remove</button>
+              <button id="fragmentNewButton" class="menuButton">New</button>
+              <button id="fragmentDeleteButton" class="menuButton">Delete</button>
             </div>
             
             <div class="menuSectionBlock">
-              <input type="text" class="nameInput"></input>
-              <button class="menuButton">Change Sprite</button>
+              <input id="fragmentSpriteNameField" type="text" class="nameInput"></input>
+              <button id="fragmentChangeSpriteButton" class="menuButton">Change Sprite</button>
             </div>
             
             <div class="menuSectionBlock">
-              <input type="text" class="nameInput"></input>
-              <button class="menuButton">Change Style</button>
+              <input id="fragmentStyleNameField" type="text" class="nameInput"></input>
+              <button id="fragmentChangeStyleButton" class="menuButton">Change Style</button>
             </div>
             
             <div class="menuSectionBlock">
@@ -172,18 +173,17 @@
                 </tr>
                 <tr>
                   <td>
-                    <input type="number" class="coord"></input>
+                    <input id="fragmentXField" type="number" class="coord"></input>
                   </td>
                   <td>
-                    <input type="number" class="coord"></input>
+                    <input id="fragmentYField" type="number" class="coord"></input>
                   </td>
                   <td>
-                    <input type="number" class="coord"></input>
+                    <input id="fragmentZField" type="number" class="coord"></input>
                   </td>
                 </tr>
-                
-                <tr>
               </table>
+              <button id="fragmentPositionButton" class="menuButton">Move</button>
             </div>
           </div>
         </div>
@@ -192,11 +192,14 @@
     
     <div id="spriteViewBody" class="menuBody">
       <div class="loadingSection">
-        <button id="uploadSprites" class="menuButton loadButton">Upload</button>
+        <button id="uploadSpritesButton" class="menuButton loadButton">Upload</button>
+        <input id="uploadSprites" type="file" class="fileIO"/>
         
-        <button id="downloadUsedSprites" class="menuButton loadButton">Download Used</button>
-        
-        <button id="downloadAllSprites" class="menuButton loadButton">Download All</button>
+        <button id="downloadVisibleSpritesButton" class="menuButton loadButton">Download Visible</button>
+        <a id="downloadVisibleSprites" class="fileIO"></a>
+
+        <button id="downloadAllSpritesButton" class="menuButton loadButton">Download All</button>
+        <a id="downloadAllSprites" class="fileIO"></a>
       </div>
       
       <div class="menuSection">
@@ -204,23 +207,38 @@
         <div class="menuSectionBody">
           <div class="menuSectionColumn menuSectionLeft">
             <ul id="spriteList" class="selectorList spriteList">
-              <li>Test Element</li>
             </ul>
           </div>
           
           <div class="menuSectionColumn menuSectionRight">
             <div class="menuSectionBlock">
-              <input type="text"></input><br>
-              <button class="menuButton">New</button>
-              <button class="menuButton">Rename</button>
+              <input id="spriteNameField" type="text"></input><br>
+              <button id="spriteNewButton" class="menuButton">New</button>
+              <button id="spriteRenameButton" class="menuButton">Rename</button>
             </div>
             
             <div class="menuSectionBlock">
-              <button class="menuButton">Modify Sprite</button>
+              <button id="spriteModifyButton" class="menuButton">Modify Sprite</button>
             </div>
             
             <div class="menuSectionBlock">
-              <button class="menuButton">Delete</button>
+              <p>Replace with blank:</p>
+              <input id="spriteReplaceBlankField" type="text"></input><br>
+              <button id="spriteReplaceBlankButton" class="menuButton">Change</button>
+            </div>
+            
+            <div class="menuSectionBlock">
+              Ignore Leading Spaces: 
+              <input id="spriteIgnoreLeadingSpacesCheckbox" type="checkbox"></input>
+            </div>
+            
+            <div class="menuSectionBlock">
+              Space Is Transparent: 
+              <input id="spriteSpaceIsTransparentCheckbox" type="checkbox"></input>
+            </div>
+            
+            <div class="menuSectionBlock">
+              <button id="spriteDeleteButton" class="menuButton">Delete</button>
             </div>
           </div>
         </div>
@@ -230,55 +248,27 @@
         <h3 class="menuSectionTitle">Styles:</h3>
         <div class="menuSectionBody">
           <div class="menuSectionColumn menuSectionLeft">
-            <ul id="spriteList" class="selectorList spriteList">
-              <li>Test Element</li>
+            <ul id="styleList" class="selectorList spriteList">
             </ul>
           </div>
           
           <div class="menuSectionColumn menuSectionRight">
             <div class="menuSectionBlock">
-              <input type="text"></input><br>
-              <button class="menuButton">New</button>
-              <button class="menuButton">Rename</button>
+              <button id="styleNewButton" class="menuButton">New</button>
+              <button id="styleDeleteButton" class="menuButton">Delete</button>
+            </div>
+
+            <div class="menuSectionBlock">
+              <input id="styleNameField" type="text"></input><br>
+              <button id="styleRenameButton" class="menuButton">Rename</button>
             </div>
             
-            <div class="menuSectionBlock">
-              <div class="styleOption">
-                <label for="backgroundColor">Background Color:</label>
-                <input name="backgroundColor" type="text"></input>
+            <div id="styleUpdateForm" class="menuSectionBlock">
+              <div id="styleUpdateFormFields">
               </div>
-              
-              <div class="styleOption">
-                <label for="color">Text Color:</label>
-                <input name="color" type="text"></input>
-              </div>
-
-              <div class="styleOption">
-                <label for="fontWeight">Font Weight:</label>
-                <input name="fontWeight" type="text"></input>
-              </div>
-
-              <div class="styleOption">
-                <label for="fontStyle">Font Style:</label>
-                <input name="fontStyle" type="text"></input>
-              </div>
-
-              <div class="styleOption">
-                <label for="textDecoration">Text Decoration:</label>
-                <input name="textDecoration" type="text"></input>
-              </div>
-              
-              <div class="styleOption">
-                <label for="cursor">Cursor:</label>
-                <input name="cursor" type="text"></input>
-              </div>
-              
-              <button class="menuButton">Update</button>
+              <button id="styleUpdateButton" class="menuButton">Update</button>
             </div>
             
-            <div class="menuSectionBlock">
-              <button class="menuButton">Delete</button>
-            </div>
           </div>
         </div>
       </div>

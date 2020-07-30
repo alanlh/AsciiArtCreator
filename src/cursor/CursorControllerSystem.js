@@ -20,7 +20,7 @@ export default class CursorControllerSystem extends AsciiEngine.System {
     this.cursorEntity.setComponent(new AsciiEngine.Components.Position(
       this.cursorComponent.x, this.cursorComponent.y
     ));
-    this.cursorEntity.setComponent(resourceManager.get("sprite-cursor").construct());
+    this.cursorEntity.setComponent(resourceManager.get("_#_#_sprite-cursor").construct());
     this.cursorEntity.setComponent(this.cursorComponent);
     this.cursorEntity.setComponent(new BlinkerComponent(6, 3));
     

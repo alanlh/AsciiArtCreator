@@ -82,7 +82,7 @@
   flex: 50%;
 }
 
-#componentViewTab {
+#templateViewTab {
   flex: 50%;
 }
 
@@ -92,7 +92,7 @@
   margin: 5px;
 }
 
-#componentViewBody {
+#templateViewBody {
   
 }
 
@@ -164,8 +164,21 @@ table.selectorList {
   width: 24vw;
 }
 
+.selectorListElement.selected {
+  background-color: rgb(216, 216, 216);
+}
+
+.selectorListElement.used {
+  font-weight: bold;
+}
+
 .selectorListElement:hover {
-  background-color: rgb(200, 200, 200);
+  background-color: rgb(196, 196, 196);
+  cursor: pointer;
+}
+
+.selectorListElement:active {
+  background-color: rgb(180, 180, 180);
   cursor: pointer;
 }
 
@@ -202,6 +215,10 @@ button.menuButton:hover {
 
 button.menuButton:active {
   background-color: rgb(232, 240, 240);
+}
+
+input.fileIO {
+  display: none;
 }
 
 .nameInput {

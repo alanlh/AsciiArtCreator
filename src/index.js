@@ -1,9 +1,26 @@
 import CursorControllerSystem from "./cursor/CursorControllerSystem.js";
 
-import ArtHolderSystem from "./systems/ArtHolderSystem.js";
-import DisplayHandlerSystem from "./systems/DisplayHandlerSystem.js";
+// State Management
+import StateManager from "./state_management/StateManager.js";
 
-import TextCellComponent from "./components/TextCellComponent.js";
+// Menu Imports
+import MenuSetup from "./menu/MenuSetup.js";
+
+// import LoadingSystem from "./controllers/LoadingSystem.js";
+// import StyleChangeHandler from "./controllers/StyleChangeHandler.js";
+// 
+// import ArtHolderSystem from "./systems/ArtHolderSystem.js";
+// import DisplayHandlerSystem from "./display/DisplayHandlerSystem.js";
+// 
+// import TextCellComponent from "./components/TextCellComponent.js";
+// 
+// import AEObjectTracker from "./AEObjectTracker.js";
+// 
+// import TemplateOperations from "./database/Template.js";
+// import FrameOperations from "./database/Frame.js";
+// import FragmentOperations from "./database/Frame.js";
+// import SpriteOperations from "./database/Frame.js";
+// import StyleOperations from "./database/Frame.js";
 
 const engine = new AsciiEngine.Engine();
 
@@ -35,36 +52,50 @@ async function main() {
     "./assets/cursor.json",
   ]);
   
+  // Load Base AsciiEngine Systems
   let cursorController = new CursorControllerSystem();
-  let displayHandler = new DisplayHandlerSystem();
-  let artHolder = new ArtHolderSystem();
-  
-  let asciiRender = new AsciiEngine.Systems.AsciiRender("AsciiRender");
-  
   engine.getSystemManager().addSystem(cursorController);
-  engine.getSystemManager().addSystem(displayHandler);
-  engine.getSystemManager().addSystem(artHolder);
+  let asciiRender = new AsciiEngine.Systems.AsciiRender("AsciiRender");
   engine.getSystemManager().addSystem(asciiRender);
+  
+  // State
+  let stateManager = new StateManager();
+  
+  // Menu setup
+  for (let type in MenuSetup) {
+    MenuSetup[type](stateManager);
+  }
+  
+  // let displayHandler = new DisplayHandlerSystem();
+  // let artHolder = new ArtHolderSystem();
+  // let loadingSystem = new LoadingSystem();
+  // let styleChangeHandler = new StyleChangeHandler();
+  // let objTracker = new AEObjectTracker();
+  // 
+  // engine.getSystemManager().addSystem(displayHandler);
+  // engine.getSystemManager().addSystem(artHolder);
+  // engine.getSystemManager().addSystem(loadingSystem);
+  // engine.getSystemManager().addSystem(styleChangeHandler);
   
   engine.startLoop(125);
 }
 
 function setupUI() {
   // Top tabs for alternating between the component and sprite tab. 
-  document.getElementById("componentViewTab").addEventListener("click", (event) => {
-    document.getElementById("componentViewBody").style.display = "block";
+  document.getElementById("templateViewTab").addEventListener("click", (event) => {
+    document.getElementById("templateViewBody").style.display = "block";
     document.getElementById("spriteViewBody").style.display = "none";
     
-    document.getElementById("componentViewTab").classList.add("activeTab");
+    document.getElementById("templateViewTab").classList.add("activeTab");
     document.getElementById("spriteViewTab").classList.remove("activeTab");
 
   });
   
   document.getElementById("spriteViewTab").addEventListener("click", (event) => {
-    document.getElementById("componentViewBody").style.display = "none";
+    document.getElementById("templateViewBody").style.display = "none";
     document.getElementById("spriteViewBody").style.display = "block";
     
-    document.getElementById("componentViewTab").classList.remove("activeTab");
+    document.getElementById("templateViewTab").classList.remove("activeTab");
     document.getElementById("spriteViewTab").classList.add("activeTab");
   });
 }

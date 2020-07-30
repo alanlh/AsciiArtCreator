@@ -1,12 +1,12 @@
 {
   "sprites": {
-    "emptySprite": {
+    "_#_#_emptySprite": {
       "text": "",
       "settings": {
         
       }
-    }
-    "blankSprite": {
+    },
+    "_#_#_blankSprite": {
       "text": " ",
       "settings": {
         "spaceIsTransparent": false
@@ -14,13 +14,13 @@
     }
   },
   "styles": {
-    "emptyStyle": {
+    "_#_#_emptyStyle": {
       
     },
-    "blankHoverStyle": {
+    "_#_#_blankHoverStyle": {
       "backgroundColor": "#cccccc"
     },
-    "cursorStyle": {
+    "_#_#_cursorStyle": {
       "backgroundColor": "#cccccc"
     }
   }
