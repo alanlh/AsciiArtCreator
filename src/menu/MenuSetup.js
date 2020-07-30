@@ -237,6 +237,7 @@ function handleDelete(stateManager, type) {
   MenuListFuncs.handleSelectChange(stateManager, type);
   if (type === TypeEnum.Sprite || type === TypeEnum.Style) {
     MenuFieldFuncs.refreshFields[TypeEnum.Fragment](stateManager);
+    MenuListFuncs.refreshList(stateManager, TypeEnum.Fragment);
   } else if (type === TypeEnum.Fragment) {
     MenuListFuncs.refreshList(stateManager, TypeEnum.Sprite);
     MenuListFuncs.refreshList(stateManager, TypeEnum.Style);
@@ -251,6 +252,7 @@ function handleRename(stateManager, type) {
   MenuFieldFuncs.refreshFields[type](stateManager);
   if (type === TypeEnum.Sprite || type === TypeEnum.Style) {
     MenuFieldFuncs.refreshFields[TypeEnum.Fragment](stateManager);
+    MenuListFuncs.refreshList(stateManager, TypeEnum.Fragment);
   }
 }
 
@@ -292,7 +294,7 @@ function handleFragmentSpriteChange(stateManager) {
   let spriteName = document.getElementById("fragmentSpriteNameField").value || undefined;
   stateManager.setFragmentSprite(spriteName);
   MenuFieldFuncs.refreshFields[TypeEnum.Fragment](stateManager);
-  MenuListFuncs.refreshListItemName(stateManager, 
+  MenuListFuncs.populateListItemAttributes(stateManager, 
     stateManager.getSelectedId(TypeEnum.Fragment));
   MenuListFuncs.refreshList(stateManager, TypeEnum.Sprite);
 }
@@ -301,7 +303,7 @@ function handleFragmentStyleChange(stateManager) {
   let styleName = document.getElementById("fragmentStyleNameField").value || undefined;
   stateManager.setFragmentStyle(styleName);
   MenuFieldFuncs.refreshFields[TypeEnum.Fragment](stateManager);
-  MenuListFuncs.refreshListItemName(stateManager, 
+  MenuListFuncs.populateListItemAttributes(stateManager, 
     stateManager.getSelectedId(TypeEnum.Fragment));
   MenuListFuncs.refreshList(stateManager, TypeEnum.Style);
 }

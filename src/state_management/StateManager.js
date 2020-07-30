@@ -193,15 +193,33 @@ export default class StateManager {
     return dataObj.id;
   }
   
+  deleteSelected(type, id) {
+    let delId = id || this._selectedIds[type];
+    if (delId !== undefined) {
+      this.delete(delId);
+      this._selectedIds[type] = undefined;
+      if (type === TypeEnum.Template) {
+        this._selectedIds[TypeEnum.Frame] = undefined;
+        this._selectedIds[TypeEnum.Fragment] = undefined;
+      } else if (type === TypeEnum.Frame) {
+        this._selectedIds[TypeEnum.Fragment] = undefined;
+      }
+    } else {
+      Log.warn("Attempting to delete non-existent object.");
+    }
+    return delId;
+  }
+  
   delete(id) {
     if (!(id in this._objects)) {
       Log.warn("Attempting to delete non-existent object.");
       return;
     }
-    this._deleteInternal(id, true);
+    let type = this._typeIndex[id];
+    this._deleteInternal(id, type, true);
   }
   
-  _deleteInternal(delId, modifyReferences) {
+  _deleteInternal(delId, type, modifyReferences) {
     let delObj = this._objects[delId];
     if (delObj === undefined) {
       Log.error("Attempting to delete non-existent object.");
@@ -211,17 +229,22 @@ export default class StateManager {
     switch (type) {
       case TypeEnum.Template:
         for (let frameId in delObj.framesById) {
-          this._deleteInternal(frameId, false);
+          this._deleteInternal(frameId, TypeEnum.Frame, false);
         }
         break;
       case TypeEnum.Frame:
         for (let fragId of delObj.fragIds) {
-          this._deleteInternal(fragId, false);
+          this._deleteInternal(fragId, TypeEnum.Fragment, false);
         }
         break;
       case TypeEnum.Fragment:
-        this._objects[delObj.spriteId].removeUsage(delObj.id);
-        this._objects[delObj.styleId].removeUsage(delObj.id);
+        if (delObj.spriteId) {
+          this._objects[delObj.spriteId].removeUsage(delObj.id);
+        }
+        if (delObj.styleId) {
+          this._objects[delObj.styleId].removeUsage(delObj.id);
+        }
+        break;
       case TypeEnum.Sprite:
         for (let fragId of delObj.usages) {
           this._objects[fragId].spriteId = undefined;
@@ -246,21 +269,11 @@ export default class StateManager {
       }
     }
     
-    delete this._objects[deletedId];
-    delete this._typeIndex[deleteId];
+    delete this._objects[delId];
+    delete this._typeIndex[delId];
     if (TypeConfig[type].hasGlobalName) {
-      delete this._nameIndex[deletedId];
+      delete this._nameIndex[delObj.name];
     }
-  }
-  
-  deleteSelected(type, id) {
-    let delId = this._selectedIds[type];
-    if (delId !== undefined) {
-      this.delete(delId);
-    } else {
-      Log.warn("Attempting to delete non-existent object.");
-    }
-    return delId;
   }
   
   renameSelected(type, newName) {
@@ -285,7 +298,7 @@ export default class StateManager {
       let frame = this._objects[changingId];
       let oldName = frame.name;
       let parent = this._objects[frame.templateId];
-      if (parent.renameFragment(oldName, newName)) {
+      if (parent.renameFrame(oldName, newName)) {
         frame.name = newName;
       } else {
         Log.warn("Another object already uses this name.")
@@ -380,11 +393,11 @@ export default class StateManager {
       (fragment) => {
         if (spriteName in this._nameIndex) {
           if (this._typeIndex[this._nameIndex[spriteName]] !== TypeEnum.Sprite) {
-            Logging.warn("Name does not belong to any sprite");
+            Log.warn("Name does not belong to any sprite");
             return;
           }
         } else if (spriteName) {
-          Logging.warn("Name does not exist.");
+          Log.warn("Name does not exist.");
           return;
         }
         let spriteId = (spriteName) ? this._nameIndex[spriteName] : undefined;
@@ -419,11 +432,11 @@ export default class StateManager {
       (fragment) => {
         if (styleName in this._nameIndex) {
           if (this._typeIndex[this._nameIndex[styleName]] !== TypeEnum.Style) {
-            Logging.warn("Name does not belong to any style");
+            Log.warn("Name does not belong to any style");
             return;
           }
         } else if (styleName) {
-          Logging.warn("Name does not exist.");
+          Log.warn("Name does not exist.");
           return;
         }
         let styleId = (styleName) ? this._nameIndex[styleName] : undefined;
