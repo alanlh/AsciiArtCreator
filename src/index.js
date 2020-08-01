@@ -6,6 +6,8 @@ import StateManager from "./state_management/StateManager.js";
 // Menu Imports
 import MenuSetup from "./menu/MenuSetup.js";
 
+import LoadingSetup from "./menu/Loading.js";
+
 // import LoadingSystem from "./controllers/LoadingSystem.js";
 // import StyleChangeHandler from "./controllers/StyleChangeHandler.js";
 // 
@@ -65,6 +67,8 @@ async function main() {
   for (let type in MenuSetup) {
     MenuSetup[type](stateManager);
   }
+  
+  LoadingSetup(stateManager);
   
   // let displayHandler = new DisplayHandlerSystem();
   // let artHolder = new ArtHolderSystem();

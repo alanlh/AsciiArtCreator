@@ -10,6 +10,7 @@
       <div id="artCreator"></div>
     </div>
     <div id="menuBuffer"></div>
+    <a id="download" class="fileIO"/></a>
   </div>
   
   <div id="menuScreen">
@@ -35,9 +36,7 @@
         <input id="uploadTemplates" type="file" class="fileIO"/>
 
         <button id="downloadSelectedTemplatesButton" class="menuButton loadButton">Download Selected</button>
-        <a id="downloadSelectedTemplates" class="fileIO"/></a>
         <button id="downloadAllTemplatesButton" class="menuButton loadButton">Download All</button>
-        <a id="downloadAllTemplates" class="fileIO"/></a>
       </div>
       
       <div class="menuSection">
@@ -182,10 +181,7 @@
         <input id="uploadSprites" type="file" class="fileIO"/>
         
         <button id="downloadVisibleSpritesButton" class="menuButton loadButton">Download Visible</button>
-        <a id="downloadVisibleSprites" class="fileIO"></a>
-
         <button id="downloadAllSpritesButton" class="menuButton loadButton">Download All</button>
-        <a id="downloadAllSprites" class="fileIO"></a>
       </div>
       
       <div class="menuSection">
@@ -198,8 +194,9 @@
           
           <div class="menuSectionColumn menuSectionRight">
             <div class="menuSectionBlock">
-              <input id="spriteNameField" type="text"></input><br>
               <button id="spriteNewButton" class="menuButton">New</button>
+              <button id="spriteDeleteButton" class="menuButton">Delete</button>
+              <input id="spriteNameField" type="text"></input><br>
               <button id="spriteRenameButton" class="menuButton">Rename</button>
             </div>
             
@@ -209,7 +206,7 @@
             
             <div class="menuSectionBlock">
               <p>Replace with blank:</p>
-              <input id="spriteReplaceBlankField" type="text"></input><br>
+              <input id="spriteReplaceBlankField" type="text" class="characterInputField"></input><br>
               <button id="spriteReplaceBlankButton" class="menuButton">Change</button>
             </div>
             
@@ -224,7 +221,6 @@
             </div>
             
             <div class="menuSectionBlock">
-              <button id="spriteDeleteButton" class="menuButton">Delete</button>
             </div>
           </div>
         </div>

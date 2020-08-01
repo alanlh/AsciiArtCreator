@@ -41,6 +41,12 @@ export function removeListItem(id) {
   document.getElementById(id).remove();
 }
 
+export function refreshAll(stateManager) {
+  for (let type in TypeEnum) {
+    refreshList(stateManager, TypeEnum[type]);
+  }
+}
+
 export function refreshList(stateManager, type) {
   let menuListId = TypeConfig[type].menuListId;
   clearList(menuListId);

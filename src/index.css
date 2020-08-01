@@ -228,3 +228,7 @@ input.fileIO {
 .styleOption {
   float: left;
 }
+
+.characterInputField {
+  font-weight: bold;  
+}

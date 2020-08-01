@@ -1,5 +1,4 @@
 const TypeEnum = {
-  NONE: 0,
   Template: "__TemplateType",
   Frame: "__FrameType",
   Fragment: "__FragmentType",

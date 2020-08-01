@@ -40,9 +40,9 @@ export let menuFieldPopulators = {
     document.getElementById("spriteIgnoreLeadingSpacesCheckbox").checked = params.ignoreLeadingSpaces;
     document.getElementById("spriteSpaceIsTransparentCheckbox").checked = params.spaceIsTransparent;
     if (params.beingModified) {
-      document.getElementById("spriteModifyButton").textContent = "Modify Sprite";
-    } else {
       document.getElementById("spriteModifyButton").textContent = "Save Sprite";
+    } else {
+      document.getElementById("spriteModifyButton").textContent = "Modify Sprite";
     }
   },
   [TypeEnum.Style]: function populateStyleFields(params = {
@@ -96,10 +96,10 @@ export let refreshFields = {
   [TypeEnum.Sprite]: createFieldRefresher(TypeEnum.Sprite, (stateManager, selected) => {
     return {
       name: stateManager.getName(selected),
-      setAsBlank: stateManager.getSpriteSetAsBlank(selected),
+      setAsBlank: stateManager.getSpriteSetAsBlank(selected) || "",
       ignoreLeadingSpaces: stateManager.getSpriteIgnoreLeadingSpaces(selected),
       spaceIsTransparent: stateManager.getSpriteSpaceIsTransparent(selected),
-      beingModified: stateManager.isSpriteBeingModified(),
+      beingModified: stateManager.isSpriteBeingModified(selected),
     };
   }),
   [TypeEnum.Style]: createFieldRefresher(TypeEnum.Style, (stateManager, selected) => {
@@ -114,4 +114,11 @@ export let refreshFields = {
     };
   }),
 }
+
 Object.freeze(refreshFields);
+
+export function refreshAll(stateManager) {
+  for (let type in refreshFields) {
+    refreshFields[type](stateManager);
+  }
+}

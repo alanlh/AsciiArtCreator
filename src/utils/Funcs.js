@@ -68,7 +68,7 @@ const Funcs = {
     let name = base;
     let idx = 0;
     while (name in dict) {
-      name = base + "(" + (++idx) + ")";
+      name = base + " (" + (++idx) + ")";
     }
     return name;
   },

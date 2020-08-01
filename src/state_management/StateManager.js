@@ -409,6 +409,7 @@ export default class StateManager {
         if (spriteId) {
           this._objects[fragment.spriteId].addUsage(fragment.id);
         }
+        return true;
       }
     );
   }
@@ -448,6 +449,7 @@ export default class StateManager {
         if (styleId) {
           this._objects[fragment.styleId].addUsage(fragment.id);
         }
+        return true;
       }
     );
   }
@@ -468,6 +470,7 @@ export default class StateManager {
         fragment.position[0] = x;
         fragment.position[1] = y;
         fragment.position[2] = z;
+        return true;
       }
     );
   }

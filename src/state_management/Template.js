@@ -8,7 +8,7 @@ export default class Template extends DataStructBase {
     this.framesById = {};
     this.framesByName = {};
     this.position = [0, 0, 0];
-    this.visible = true;
+    this.visible = false;
     this.activeFrame = undefined;
   }
   
@@ -54,6 +54,9 @@ export default class Template extends DataStructBase {
   removeFrame(frameId) {
     if (!(frameId in this.framesById)) {
       return false;
+    }
+    if (this.activeFrame === frameId) {
+      this.activeFrame = undefined;
     }
     let frameName = this.framesById[frameId];
     delete this.framesById[frameId];

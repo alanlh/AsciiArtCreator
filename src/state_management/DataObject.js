@@ -9,7 +9,7 @@ export default class DataStructBase {
   }
   
   get type() {
-    return TypeEnum.NONE;
+    return undefined;
   }
   
   get used() {
