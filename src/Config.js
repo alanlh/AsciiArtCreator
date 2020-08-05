@@ -95,6 +95,18 @@ const SupportedStyles = {
   }, 
 }
 
+const SpriteOptions = {
+  setAsBlank: {
+    default: "",
+  },
+  spaceIsTransparent: {
+    default: true,
+  },
+  ignoreLeadingSpaces: {
+    default: true,
+  }
+}
+
 const OperationEnum = {
   New: Symbol("New"),
   Rename: Symbol("Rename"),
@@ -130,4 +142,4 @@ const ModifyOps = {
   },
 }
 
-export {TypeEnum, TypeConfig, SupportedStyles, OperationEnum, ModifyOps};
+export {TypeEnum, TypeConfig, SupportedStyles, SpriteOptions, OperationEnum, ModifyOps};

@@ -4,7 +4,7 @@ import Log from "../Logging.js";
 import * as MenuListFuncs from "./MenuListUpdateFuncs.js";
 import * as MenuFieldFuncs from "./MenuFieldUpdateFuncs.js";
 
-import {TypeEnum, TypeConfig, SupportedStyles} from "../Config.js";
+import {TypeEnum, TypeConfig, SupportedStyles, SpriteOptions} from "../Config.js";
 
 export default function LoadingSetup(stateManager) {
   Funcs.addClickListener("uploadTemplatesButton", (event) => {
@@ -104,11 +104,19 @@ function insertSpriteJson(stateManager, sprites) {
       continue;
     }
     stateManager.setSpriteText(sprites[spriteName].text, spriteId);
-    stateManager.setSpriteSetAsBlank(sprites[spriteName].settings.setAsBlank, spriteId);
-    stateManager.setSpriteIgnoreLeadingSpaces(
-      sprites[spriteName].settings.ignoreLeadingSpaces, spriteId);
-    stateManager.setSpriteSpaceIsTransparent(
-      sprites[spriteName].settings.spaceIsTransparent, spriteId);
+    let spriteSettings = sprites[spriteName].settings;
+    let setAsBlank = ("setAsBlank" in spriteSettings)
+      ? spriteSettings.setAsBlank
+      : SpriteOptions.setAsBlank.default;
+    stateManager.setSpriteSetAsBlank(setAsBlank, spriteId);
+    let ignoreLeadingSpaces = ("ignoreLeadingSpaces" in spriteSettings)
+      ? spriteSettings.ignoreLeadingSpaces
+      : SpriteOptions.ignoreLeadingSpaces.default;
+    stateManager.setSpriteIgnoreLeadingSpaces(ignoreLeadingSpaces, spriteId);
+    let spaceIsTransparent = ("spaceIsTransparent" in spriteSettings)
+      ? spriteSettings.spaceIsTransparent
+      : SpriteOptions.spaceIsTransparent.default;
+    stateManager.setSpriteSpaceIsTransparent(spaceIsTransparent, spriteId);
   }
 }
 

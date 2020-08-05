@@ -25,10 +25,9 @@ export default class StateManager {
     
     this._spriteBeingModified = undefined;
     
-    // TODO:
-    this._changedTemplates = new Set();
-    this._changedSprites = new Set();
-    this._changedStyles = new Set();
+    // Maps Ids to TypeEnum.
+    // The only TypeEnums should be Template, Sprite, and Style
+    this._changedIds = {};
   }
   
   hasId(id) {
@@ -58,8 +57,14 @@ export default class StateManager {
     return this._selectedIds[type];
   }
   
-  getAEObject(id) {
-    // TODO:
+  getChangedIds() {
+    let changed = this._changedIds;
+    this._changedIds = {};
+    return changed;
+  }
+  
+  _markChanged(obj) {
+    this._changedIds[obj.container] = TypeConfig[obj.type].containerType;
   }
   
   getUsed(id) {
@@ -190,6 +195,7 @@ export default class StateManager {
     
     this._objects[dataObj.id] = dataObj;
     this._typeIndex[dataObj.id] = type;
+    this._markChanged(dataObj);
     return dataObj.id;
   }
   
@@ -215,12 +221,12 @@ export default class StateManager {
       Log.warn("Attempting to delete non-existent object.");
       return;
     }
-    let type = this._typeIndex[id];
-    this._deleteInternal(id, type, true);
+    this._deleteInternal(id, true);
   }
   
-  _deleteInternal(delId, type, modifyReferences) {
+  _deleteInternal(delId, modifyReferences) {
     let delObj = this._objects[delId];
+    let type = this._typeIndex[delId];
     if (delObj === undefined) {
       Log.error("Attempting to delete non-existent object.");
     }
@@ -252,7 +258,7 @@ export default class StateManager {
         break;
       case TypeEnum.Style:
         for (let fragId of delObj.usages) {
-          this._objects[fragId].spriteId = undefined;
+          this._objects[fragId].styleId = undefined;
         }
         break;
     }
@@ -273,6 +279,13 @@ export default class StateManager {
     delete this._typeIndex[delId];
     if (TypeConfig[type].hasGlobalName) {
       delete this._nameIndex[delObj.name];
+    }
+    
+    this._markChanged(delObj);
+    if (type === TypeEnum.Sprite || type === TypeEnum.Style) {
+      for (let usingId of delObj.usages) {
+        this._markChanged(this._objects[usingId]);
+      }
     }
   }
   
@@ -304,6 +317,12 @@ export default class StateManager {
         Log.warn("Another object already uses this name.")
       }
     }
+    this._markChanged(this._objects[changingId]);
+    if (type === TypeEnum.Sprite || type === TypeEnum.Style) {
+      for (let usingId of this._objects[changingId].usages) {
+        this._markChanged(this._objects[usingId]);
+      }
+    }
   }
   
   getTemplateVisibility(tempId) {
@@ -320,6 +339,8 @@ export default class StateManager {
       tempId || this._selectedIds[TypeEnum.Template], TypeEnum.Template, 
       (template) => {
         template.visible = !!value;
+        
+        this._markChanged(template);
       }
     );
   }
@@ -340,6 +361,8 @@ export default class StateManager {
         template.position[0] = x;
         template.position[1] = y;
         template.position[2] = z;
+        
+        this._markChanged(template);
       }
     );
   }
@@ -367,6 +390,8 @@ export default class StateManager {
               }
               template.activeFrame = frame.id;
               frame.isActiveFrame = true;
+              
+              this._markChanged(template);
             }
           }
         );
@@ -409,6 +434,8 @@ export default class StateManager {
         if (spriteId) {
           this._objects[fragment.spriteId].addUsage(fragment.id);
         }
+        
+        this._markChanged(fragment);
         return true;
       }
     );
@@ -449,6 +476,8 @@ export default class StateManager {
         if (styleId) {
           this._objects[fragment.styleId].addUsage(fragment.id);
         }
+        
+        this._markChanged(fragment);
         return true;
       }
     );
@@ -470,6 +499,8 @@ export default class StateManager {
         fragment.position[0] = x;
         fragment.position[1] = y;
         fragment.position[2] = z;
+        
+        this._markChanged(fragment);
         return true;
       }
     );
@@ -513,6 +544,8 @@ export default class StateManager {
       spriteId || this._selectedIds[TypeEnum.Sprite], TypeEnum.Sprite, 
       (sprite) => {
         sprite.text = value;
+        
+        this._markChanged(sprite);
       }
     );
   }
@@ -531,6 +564,8 @@ export default class StateManager {
       spriteId || this._selectedIds[TypeEnum.Sprite], TypeEnum.Sprite, 
       (sprite) => {
         sprite.setAsBlank = value;
+        
+        this._markChanged(sprite);
       }
     );
   }
@@ -549,6 +584,8 @@ export default class StateManager {
       spriteId || this._selectedIds[TypeEnum.Sprite], TypeEnum.Sprite, 
       (sprite) => {
         sprite.spaceIsTransparent = !!value;
+        
+        this._markChanged(sprite);
       }
     );
   }
@@ -567,6 +604,8 @@ export default class StateManager {
       spriteId || this._selectedIds[TypeEnum.Sprite], TypeEnum.Sprite, 
       (sprite) => {
         sprite.ignoreLeadingSpaces = !!value;
+        
+        this._markChanged(sprite);
       }
     );
   }
@@ -585,6 +624,8 @@ export default class StateManager {
       styleId || this._selectedIds[TypeEnum.Style], TypeEnum.Style, 
       (style) => {
         style.setProperty(propertyName, value);
+        
+        this._markChanged(style);
       }
     );
   }

@@ -5,8 +5,9 @@ import StateManager from "./state_management/StateManager.js";
 
 // Menu Imports
 import MenuSetup from "./menu/MenuSetup.js";
-
 import LoadingSetup from "./menu/Loading.js";
+
+import DisplayHandlerSystem from "./display/DisplayHandlerSystem.js";
 
 // import LoadingSystem from "./controllers/LoadingSystem.js";
 // import StyleChangeHandler from "./controllers/StyleChangeHandler.js";
@@ -62,15 +63,16 @@ async function main() {
   
   // State
   let stateManager = new StateManager();
+  engine.setModule("StateManager", stateManager);
   
   // Menu setup
   for (let type in MenuSetup) {
     MenuSetup[type](stateManager);
   }
-  
   LoadingSetup(stateManager);
   
-  // let displayHandler = new DisplayHandlerSystem();
+  let displayHandler = new DisplayHandlerSystem();
+  engine.getSystemManager().addSystem(displayHandler);
   // let artHolder = new ArtHolderSystem();
   // let loadingSystem = new LoadingSystem();
   // let styleChangeHandler = new StyleChangeHandler();

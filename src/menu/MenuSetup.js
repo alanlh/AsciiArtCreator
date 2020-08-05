@@ -267,9 +267,9 @@ function handleTemplateVisibilityChange(stateManager) {
 }
 
 function handleTemplatePositionChange(stateManager) {
-  let x = document.getElementById("templateXField").value;
-  let y = document.getElementById("templateYField").value;
-  let z = document.getElementById("templateZField").value;
+  let x = parseInt(document.getElementById("templateXField").value);
+  let y = parseInt(document.getElementById("templateYField").value);
+  let z = parseInt(document.getElementById("templateZField").value);
   stateManager.setTemplatePosition([x, y, z]);
   MenuFieldFuncs.refreshFields[TypeEnum.Template](stateManager);
 }
@@ -309,9 +309,9 @@ function handleFragmentStyleChange(stateManager) {
 }
 
 function handleFragmentPositionChange(stateManager) {
-  let x = document.getElementById("fragmentXField").value;
-  let y = document.getElementById("fragmentYField").value;
-  let z = document.getElementById("fragmentZField").value;
+  let x = parseInt(document.getElementById("fragmentXField").value);
+  let y = parseInt(document.getElementById("fragmentYField").value);
+  let z = parseInt(document.getElementById("fragmentZField").value);
   stateManager.setFragmentPosition([x, y, z]);
   MenuListFuncs.refreshListItemName(stateManager, 
     stateManager.getSelectedId(TypeEnum.Fragment));
