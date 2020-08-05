@@ -177,8 +177,11 @@ export default class StateManager {
         name = Funcs.getFreeName(name, template.framesByName);
         dataObj.name = name;
         dataObj.templateId = parentId;
-        template.framesById[dataObj.id] = dataObj.name;
-        template.framesByName[dataObj.name] = dataObj.id;
+        template.addFrame(dataObj);
+        if (template.activeFrame === undefined) {
+          template.activeFrame = dataObj.id;
+          dataObj.isActiveFrame = true;
+        }
       }
       // Shouldn't be any other case...
     }
