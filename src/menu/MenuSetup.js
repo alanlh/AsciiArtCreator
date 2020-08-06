@@ -132,10 +132,6 @@ const MenuSetup = {
       handleRename, stateManager, TypeEnum.Sprite
     ));
     
-    Funcs.addClickListener("spriteModifyButton", Funcs.callbackWithArgs(
-      handleSpriteModify, stateManager
-    ));
-    
     Funcs.addTriggerButtonClickOnEnterListener(
       "spriteReplaceBlankField", "spriteReplaceBlankButton"
     );
@@ -319,10 +315,6 @@ function handleFragmentPositionChange(stateManager) {
 }
 
 /*************************** SPRITE ***************************/
-
-function handleSpriteModify(stateManager) {
-  // TODO:
-}
 
 function handleSpriteReplaceBlank(stateManager) {
   let blankChars = document.getElementById("spriteReplaceBlankField").value;

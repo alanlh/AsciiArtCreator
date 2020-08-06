@@ -6,6 +6,7 @@ import StateManager from "./state_management/StateManager.js";
 // Menu Imports
 import MenuSetup from "./menu/MenuSetup.js";
 import LoadingSetup from "./menu/Loading.js";
+import * as SpriteModifySetup from "./menu/SpriteModifySetup.js";
 
 import DisplayHandlerSystem from "./display/DisplayHandlerSystem.js";
 
@@ -70,6 +71,7 @@ async function main() {
     MenuSetup[type](stateManager);
   }
   LoadingSetup(stateManager);
+  SpriteModifySetup.setupSpriteModify(stateManager, engine);
   
   let displayHandler = new DisplayHandlerSystem();
   engine.getSystemManager().addSystem(displayHandler);

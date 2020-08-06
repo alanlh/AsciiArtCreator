@@ -24,7 +24,7 @@ export default class StateManager {
     this._usageIndex = {};
     
     this._spriteBeingModified = undefined;
-    
+
     // Maps Ids to TypeEnum.
     // The only TypeEnums should be Template, Sprite, and Style
     this._changedIds = {};
@@ -523,10 +523,8 @@ export default class StateManager {
       spriteId || this._selectedIds[TypeEnum.Sprite], TypeEnum.Sprite, 
       (sprite) => {
         if (sprite.id === this._spriteBeingModified) {
-          // TODO: Stop and save the current value?
           this._spriteBeingModified = undefined;
         } else {
-          // TODO: Save the current modified sprite if necessary, and create a new modifier.
           this._spriteBeingModified = sprite.id;
         }
       }
