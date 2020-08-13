@@ -39,8 +39,8 @@ export default class CursorComponent extends AsciiEngine.Component {
   }
 
   shiftPosition(x, y) {
-    this.x = this.minX + (this.x + x - this.minX) % (this.maxX - this.minX);
-    this.y = this.minY + (this.y + y - this.minY) % (this.maxY - this.minY);
+    this.x = this.minX + (this.x + x - this.minX) % (this.maxX - this.minX + 1);
+    this.y = this.minY + (this.y + y - this.minY) % (this.maxY - this.minY + 1);
   }
 
   shfitNewLine() {
