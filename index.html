@@ -1,52 +1,54 @@
 <html>
+
 <head>
   <link rel="stylesheet" href="./src/index.css">
   <script src="external/engine.js"></script>
   <script type="module" src="src/index.js"></script>
 </head>
+
 <body>
   <div id="displayContainer">
     <div id="displayScreen">
       <div id="artCreator"></div>
     </div>
     <div id="menuBuffer"></div>
-    <a id="download" class="fileIO"/></a>
+    <a id="download" class="fileIO" /></a>
   </div>
-  
+
   <div id="menuScreen">
     <div id="menuHeader">
       <h1 id="title">
         Ascii Art Creator
       </h1>
-      
+
       <div id="menuTabs">
         <button class="menuTab activeTab" id="templateViewTab">
           Templates
         </button>
-        
+
         <button class="menuTab" id="spriteViewTab">
           Sprites
         </button>
       </div>
     </div>
-    
+
     <div id="templateViewBody" class="menuBody">
       <div class="loadingSection">
         <button id="uploadTemplatesButton" class="menuButton loadButton">Upload</button>
-        <input id="uploadTemplates" type="file" class="fileIO"/>
+        <input id="uploadTemplates" type="file" class="fileIO" />
 
         <button id="downloadSelectedTemplatesButton" class="menuButton loadButton">Download Selected</button>
         <button id="downloadAllTemplatesButton" class="menuButton loadButton">Download All</button>
       </div>
-      
+
       <div class="menuSection">
-        <h3 class="menuSectionTitle">Components:</h3>
+        <h3 class="menuSectionTitle">Templates:</h3>
         <div class="menuSectionBody">
           <div class="menuSectionColumn menuSectionLeft">
             <ul id="templateList" class="selectorList componentList">
             </ul>
           </div>
-          
+
           <div class="menuSectionColumn menuSectionRight">
             <div class="menuSectionBlock">
               <button id="templateNewButton" class="menuButton">New</button>
@@ -57,12 +59,12 @@
               <input id="templateNameField" type="text" class="nameInput"></input><br>
               <button id="templateRenameButton" class="menuButton">Rename</button>
             </div>
-            
+
             <div class="menuSectionBlock">
               Visible:
               <input id="templateVisibleCheckbox" type="checkbox"></input>
             </div>
-            
+
             <div class="menuSectionBlock">
               <table>
                 <tr>
@@ -93,7 +95,7 @@
           </div>
         </div>
       </div>
-      
+
       <div class="menuSection">
         <h3 class="menuSectionTitle">Frames:</h3>
         <div class="menuSectionBody">
@@ -106,7 +108,7 @@
               <button id="frameNewButton" class="menuButton">New</button>
               <button id="frameDeleteButton" class="menuButton">Delete</button>
             </div>
-            
+
             <div class="menuSectionBlock">
               <input id="frameNameField" type="text" class="nameInput"></input><br>
               <button id="frameRenameButton" class="menuButton">Rename</button>
@@ -132,17 +134,17 @@
               <button id="fragmentNewButton" class="menuButton">New</button>
               <button id="fragmentDeleteButton" class="menuButton">Delete</button>
             </div>
-            
+
             <div class="menuSectionBlock">
               <input id="fragmentSpriteNameField" type="text" class="nameInput"></input>
               <button id="fragmentChangeSpriteButton" class="menuButton">Change Sprite</button>
             </div>
-            
+
             <div class="menuSectionBlock">
               <input id="fragmentStyleNameField" type="text" class="nameInput"></input>
               <button id="fragmentChangeStyleButton" class="menuButton">Change Style</button>
             </div>
-            
+
             <div class="menuSectionBlock">
               <table>
                 <tr>
@@ -174,16 +176,16 @@
         </div>
       </div>
     </div>
-    
+
     <div id="spriteViewBody" class="menuBody">
       <div class="loadingSection">
         <button id="uploadSpritesButton" class="menuButton loadButton">Upload</button>
-        <input id="uploadSprites" type="file" class="fileIO"/>
-        
+        <input id="uploadSprites" type="file" class="fileIO" />
+
         <button id="downloadVisibleSpritesButton" class="menuButton loadButton">Download Visible</button>
         <button id="downloadAllSpritesButton" class="menuButton loadButton">Download All</button>
       </div>
-      
+
       <div class="menuSection">
         <h3 class="menuSectionTitle">Sprites:</h3>
         <div class="menuSectionBody">
@@ -191,7 +193,7 @@
             <ul id="spriteList" class="selectorList spriteList">
             </ul>
           </div>
-          
+
           <div class="menuSectionColumn menuSectionRight">
             <div class="menuSectionBlock">
               <button id="spriteNewButton" class="menuButton">New</button>
@@ -199,7 +201,7 @@
               <input id="spriteNameField" type="text"></input><br>
               <button id="spriteRenameButton" class="menuButton">Rename</button>
             </div>
-            
+
             <div class="menuSectionBlock">
               <button id="spriteModifyButton" class="menuButton">Modify Sprite</button>
               <div id="spritePositionControls" style="display: none;">
@@ -227,32 +229,32 @@
                     </td>
                   </tr>
                 </table>
-                <button id="updateSpritePosition">Update</button>
+                <button id="updateSpritePositionButton" class="menuButton">Move</button>
               </div>
             </div>
-            
+
             <div class="menuSectionBlock">
               <p>Replace with blank:</p>
               <input id="spriteReplaceBlankField" type="text" class="characterInputField"></input><br>
               <button id="spriteReplaceBlankButton" class="menuButton">Change</button>
             </div>
-            
+
             <div class="menuSectionBlock">
-              Ignore Leading Spaces: 
+              Ignore Leading Spaces:
               <input id="spriteIgnoreLeadingSpacesCheckbox" type="checkbox"></input>
             </div>
-            
+
             <div class="menuSectionBlock">
-              Space Is Transparent: 
+              Space Is Transparent:
               <input id="spriteSpaceIsTransparentCheckbox" type="checkbox"></input>
             </div>
-            
+
             <div class="menuSectionBlock">
             </div>
           </div>
         </div>
       </div>
-      
+
       <div class="menuSection">
         <h3 class="menuSectionTitle">Styles:</h3>
         <div class="menuSectionBody">
@@ -260,7 +262,7 @@
             <ul id="styleList" class="selectorList spriteList">
             </ul>
           </div>
-          
+
           <div class="menuSectionColumn menuSectionRight">
             <div class="menuSectionBlock">
               <button id="styleNewButton" class="menuButton">New</button>
@@ -271,19 +273,20 @@
               <input id="styleNameField" type="text"></input><br>
               <button id="styleRenameButton" class="menuButton">Rename</button>
             </div>
-            
+
             <div id="styleUpdateForm" class="menuSectionBlock">
               <div id="styleUpdateFormFields">
               </div>
               <button id="styleUpdateButton" class="menuButton">Update</button>
             </div>
-            
+
           </div>
         </div>
       </div>
     </div>
-    
+
     <br>
   </div>
-</body>  
+</body>
+
 </html>

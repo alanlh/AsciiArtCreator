@@ -1,4 +1,4 @@
-import {TypeEnum, TypeConfig, SupportedStyles} from "../Config.js";
+import { TypeEnum, TypeConfig, SupportedStyles } from "../Config.js";
 import Log from "../Logging.js";
 
 import Funcs from "../utils/Funcs.js";
@@ -15,71 +15,71 @@ export default class StateManager {
     for (let type in TypeEnum) {
       this._selectedIds[TypeEnum[type]] = undefined;
     }
-    
+
     this._objects = {};
     this._typeIndex = {};
     this._containerIndex = {};
-    
+
     this._nameIndex = {};
     this._usageIndex = {};
-    
+
     this._spriteBeingModified = undefined;
 
     // Maps Ids to TypeEnum.
     // The only TypeEnums should be Template, Sprite, and Style
     this._changedIds = {};
   }
-  
+
   hasId(id) {
     return id in this._objects;
   }
-  
+
   hasIdOfType(id, type) {
     return id in this._objects && this._typeIndex[id] === type;
   }
-  
+
   hasGlobalName(name) {
     return name in this._nameIndex;
   }
-  
+
   getName(id) {
     return this._objects[id].name;
   }
-  
+
   getNameOfType(id, type) {
     if (id in this._typeIndex && this._typeIndex[id] === type) {
       return this._nameIndex[id];
     }
     return undefined;
   }
-  
+
   getSelectedId(type) {
     return this._selectedIds[type];
   }
-  
+
   getChangedIds() {
     let changed = this._changedIds;
     this._changedIds = {};
     return changed;
   }
-  
+
   _markChanged(obj) {
     this._changedIds[obj.container] = TypeConfig[obj.type].containerType;
   }
-  
+
   getUsed(id) {
     if (id in this._objects) {
       return this._objects[id].used;
     }
     return false;
   }
-  
+
   getType(id) {
     if (id in this._objects) {
       return this._typeIndex[id];
     }
   }
-  
+
   getAllIds(type) {
     let ids = new Set();
     for (let id in this._objects) {
@@ -89,11 +89,11 @@ export default class StateManager {
     }
     return ids;
   }
-  
+
   getIdFromName(name) {
     return this._nameIndex[name];
   }
-  
+
   getIdOfTypeFromName(name, type) {
     if (name in this._nameIndex) {
       if (this._typeIndex[this._nameIndex[name]] === type) {
@@ -109,21 +109,21 @@ export default class StateManager {
     }
     return new Set();
   }
-  
+
   getFrameFragmentIds(frameId) {
     if (this._typeIndex[frameId] === TypeEnum.Frame) {
       return new Set(this._objects[frameId].fragIds);
     }
     return new Set();
   }
-  
+
   getSpriteUsages(spriteId) {
     if (this._typeIndex[spriteId] === TypeEnum.Sprite) {
       return new Set(this._objects[spriteId].usages);
     }
     return new Set();
   }
-  
+
   getStyleUsages(styleId) {
     if (this._typeIndex[styleId] === TypeEnum.Style) {
       return new Set(this._objects[styleId].usages);
@@ -149,7 +149,7 @@ export default class StateManager {
       this._selectedIds[TypeEnum.Fragment] = undefined;
     }
   }
-  
+
   create(type, name = "[Blank]", sameNameRequired = false) {
     if (!name) {
       Log.warn("Empty names are not allowed.");
@@ -195,13 +195,13 @@ export default class StateManager {
       dataObj.templateId = templateId;
       dataObj.frameId = frameId;
     }
-    
+
     this._objects[dataObj.id] = dataObj;
     this._typeIndex[dataObj.id] = type;
     this._markChanged(dataObj);
     return dataObj.id;
   }
-  
+
   deleteSelected(type, id) {
     let delId = id || this._selectedIds[type];
     if (delId !== undefined) {
@@ -218,7 +218,7 @@ export default class StateManager {
     }
     return delId;
   }
-  
+
   delete(id) {
     if (!(id in this._objects)) {
       Log.warn("Attempting to delete non-existent object.");
@@ -226,14 +226,14 @@ export default class StateManager {
     }
     this._deleteInternal(id, true);
   }
-  
+
   _deleteInternal(delId, modifyReferences) {
     let delObj = this._objects[delId];
     let type = this._typeIndex[delId];
     if (delObj === undefined) {
       Log.error("Attempting to delete non-existent object.");
     }
-    
+
     // These are when other obj is ALWAYS impacted.
     switch (type) {
       case TypeEnum.Template:
@@ -265,7 +265,7 @@ export default class StateManager {
         }
         break;
     }
-    
+
     // These should only happen if this is the initial object being deleted.
     if (modifyReferences) {
       switch (type) {
@@ -277,13 +277,13 @@ export default class StateManager {
           break;
       }
     }
-    
+
     delete this._objects[delId];
     delete this._typeIndex[delId];
     if (TypeConfig[type].hasGlobalName) {
       delete this._nameIndex[delObj.name];
     }
-    
+
     this._markChanged(delObj);
     if (type === TypeEnum.Sprite || type === TypeEnum.Style) {
       for (let usingId of delObj.usages) {
@@ -291,14 +291,14 @@ export default class StateManager {
       }
     }
   }
-  
+
   renameSelected(type, newName) {
     let changingId = this._selectedIds[type];
     if (changingId === undefined) {
       Log.warn("No id selected.");
       return;
     }
-    
+
     if (TypeConfig[type].hasGlobalName) {
       if (newName in this._nameIndex) {
         Log.warn("Another object already uses this name.")
@@ -309,7 +309,7 @@ export default class StateManager {
       this._nameIndex[newName] = changingId;
       delete this._nameIndex[oldName];
     }
-    
+
     if (type === TypeEnum.Frame) {
       let frame = this._objects[changingId];
       let oldName = frame.name;
@@ -327,64 +327,64 @@ export default class StateManager {
       }
     }
   }
-  
+
   getTemplateVisibility(tempId) {
     return this._checkExistenceThenCallback(
-      tempId || this._selectedIds[TypeEnum.Template], TypeEnum.Template, 
+      tempId || this._selectedIds[TypeEnum.Template], TypeEnum.Template,
       (template) => {
         return template.visible;
       }
     );
   }
-  
+
   setTemplateVisibility(value, tempId) {
     return this._checkExistenceThenCallback(
-      tempId || this._selectedIds[TypeEnum.Template], TypeEnum.Template, 
+      tempId || this._selectedIds[TypeEnum.Template], TypeEnum.Template,
       (template) => {
         template.visible = !!value;
-        
+
         this._markChanged(template);
       }
     );
   }
-  
+
   getTemplatePosition(tempId) {
     return this._checkExistenceThenCallback(
-      tempId || this._selectedIds[TypeEnum.Template], TypeEnum.Template, 
+      tempId || this._selectedIds[TypeEnum.Template], TypeEnum.Template,
       (template) => {
         return [...template.position];
       }
     );
   }
-  
+
   setTemplatePosition([x, y, z], tempId) {
     return this._checkExistenceThenCallback(
-      tempId || this._selectedIds[TypeEnum.Template], TypeEnum.Template, 
+      tempId || this._selectedIds[TypeEnum.Template], TypeEnum.Template,
       (template) => {
         template.position[0] = x;
         template.position[1] = y;
         template.position[2] = z;
-        
+
         this._markChanged(template);
       }
     );
   }
-  
+
   getTemplateActiveFrame(tempId) {
     return this._checkExistenceThenCallback(
-      tempId || this._selectedIds[TypeEnum.Template], TypeEnum.Template, 
+      tempId || this._selectedIds[TypeEnum.Template], TypeEnum.Template,
       (template) => {
         return template.activeFrame;
       }
     );
   }
-  
+
   setTemplateActiveFrame(frameId, tempId) {
     return this._checkExistenceThenCallback(
-      tempId || this._selectedIds[TypeEnum.Template], TypeEnum.Template, 
+      tempId || this._selectedIds[TypeEnum.Template], TypeEnum.Template,
       (template) => {
         return this._checkExistenceThenCallback(
-          frameId || this._selectedIds[TypeEnum.Frame], TypeEnum.Frame, 
+          frameId || this._selectedIds[TypeEnum.Frame], TypeEnum.Frame,
           (frame) => {
             if (frame.parent === template.id) {
               let oldActiveFrameId = template.activeFrame;
@@ -393,7 +393,7 @@ export default class StateManager {
               }
               template.activeFrame = frame.id;
               frame.isActiveFrame = true;
-              
+
               this._markChanged(template);
             }
           }
@@ -401,23 +401,23 @@ export default class StateManager {
       }
     );
   }
-  
+
   getFragmentSprite(fragId) {
     return this._checkExistenceThenCallback(
-      fragId || this._selectedIds[TypeEnum.Fragment], TypeEnum.Fragment, 
+      fragId || this._selectedIds[TypeEnum.Fragment], TypeEnum.Fragment,
       (fragment) => {
         let spriteId = fragment.spriteId;
-        if (spriteId && spriteId in this._objects 
+        if (spriteId && spriteId in this._objects
           && this._typeIndex[spriteId] === TypeEnum.Sprite) {
           return this._objects[spriteId].name;
         }
       }
     );
   }
-  
+
   setFragmentSprite(spriteName, fragId) {
     return this._checkExistenceThenCallback(
-      fragId || this._selectedIds[TypeEnum.Fragment], TypeEnum.Fragment, 
+      fragId || this._selectedIds[TypeEnum.Fragment], TypeEnum.Fragment,
       (fragment) => {
         if (spriteName in this._nameIndex) {
           if (this._typeIndex[this._nameIndex[spriteName]] !== TypeEnum.Sprite) {
@@ -437,29 +437,29 @@ export default class StateManager {
         if (spriteId) {
           this._objects[fragment.spriteId].addUsage(fragment.id);
         }
-        
+
         this._markChanged(fragment);
         return true;
       }
     );
   }
-  
+
   getFragmentStyle(fragId) {
     return this._checkExistenceThenCallback(
-      fragId || this._selectedIds[TypeEnum.Fragment], TypeEnum.Fragment, 
+      fragId || this._selectedIds[TypeEnum.Fragment], TypeEnum.Fragment,
       (fragment) => {
         let styleId = fragment.styleId;
-        if (styleId && styleId in this._objects 
+        if (styleId && styleId in this._objects
           && this._typeIndex[styleId] === TypeEnum.Style) {
           return this._objects[styleId].name;
         }
       }
     );
   }
-  
+
   setFragmentStyle(styleName, fragId) {
     return this._checkExistenceThenCallback(
-      fragId || this._selectedIds[TypeEnum.Fragment], TypeEnum.Fragment, 
+      fragId || this._selectedIds[TypeEnum.Fragment], TypeEnum.Fragment,
       (fragment) => {
         if (styleName in this._nameIndex) {
           if (this._typeIndex[this._nameIndex[styleName]] !== TypeEnum.Style) {
@@ -479,48 +479,48 @@ export default class StateManager {
         if (styleId) {
           this._objects[fragment.styleId].addUsage(fragment.id);
         }
-        
+
         this._markChanged(fragment);
         return true;
       }
     );
   }
-  
+
   getFragmentPosition(fragId) {
     return this._checkExistenceThenCallback(
-      fragId || this._selectedIds[TypeEnum.Fragment], TypeEnum.Fragment, 
+      fragId || this._selectedIds[TypeEnum.Fragment], TypeEnum.Fragment,
       (fragment) => {
         return [...fragment.position];
       }
     );
   }
-  
+
   setFragmentPosition([x, y, z], fragId) {
     return this._checkExistenceThenCallback(
-      fragId || this._selectedIds[TypeEnum.Fragment], TypeEnum.Fragment, 
+      fragId || this._selectedIds[TypeEnum.Fragment], TypeEnum.Fragment,
       (fragment) => {
         fragment.position[0] = x;
         fragment.position[1] = y;
         fragment.position[2] = z;
-        
+
         this._markChanged(fragment);
         return true;
       }
     );
   }
-  
+
   isSpriteBeingModified(spriteId) {
-    return this._spriteBeingModified !== undefined 
+    return this._spriteBeingModified !== undefined
       && (spriteId === undefined || spriteId === this._spriteBeingModified);
   }
-  
+
   getSpriteBeingModified() {
     return this._spriteBeingModified;
   }
-  
+
   toggleSpriteBeingModified(spriteId) {
     return this._checkExistenceThenCallback(
-      spriteId || this._selectedIds[TypeEnum.Sprite], TypeEnum.Sprite, 
+      spriteId || this._selectedIds[TypeEnum.Sprite], TypeEnum.Sprite,
       (sprite) => {
         if (sprite.id === this._spriteBeingModified) {
           this._spriteBeingModified = undefined;
@@ -533,19 +533,19 @@ export default class StateManager {
 
   getSpriteText(spriteId) {
     return this._checkExistenceThenCallback(
-      spriteId || this._selectedIds[TypeEnum.Sprite], TypeEnum.Sprite, 
+      spriteId || this._selectedIds[TypeEnum.Sprite], TypeEnum.Sprite,
       (sprite) => {
         return sprite.text;
       }
     );
   }
-  
+
   setSpriteText(value, spriteId) {
     return this._checkExistenceThenCallback(
-      spriteId || this._selectedIds[TypeEnum.Sprite], TypeEnum.Sprite, 
+      spriteId || this._selectedIds[TypeEnum.Sprite], TypeEnum.Sprite,
       (sprite) => {
         sprite.text = value;
-        
+
         this._markChanged(sprite);
       }
     );
@@ -553,19 +553,19 @@ export default class StateManager {
 
   getSpriteSetAsBlank(spriteId) {
     return this._checkExistenceThenCallback(
-      spriteId || this._selectedIds[TypeEnum.Sprite], TypeEnum.Sprite, 
+      spriteId || this._selectedIds[TypeEnum.Sprite], TypeEnum.Sprite,
       (sprite) => {
         return sprite.setAsBlank;
       }
     );
   }
-  
+
   setSpriteSetAsBlank(value, spriteId) {
     return this._checkExistenceThenCallback(
-      spriteId || this._selectedIds[TypeEnum.Sprite], TypeEnum.Sprite, 
+      spriteId || this._selectedIds[TypeEnum.Sprite], TypeEnum.Sprite,
       (sprite) => {
         sprite.setAsBlank = value;
-        
+
         this._markChanged(sprite);
       }
     );
@@ -573,19 +573,19 @@ export default class StateManager {
 
   getSpriteSpaceIsTransparent(spriteId) {
     return this._checkExistenceThenCallback(
-      spriteId || this._selectedIds[TypeEnum.Sprite], TypeEnum.Sprite, 
+      spriteId || this._selectedIds[TypeEnum.Sprite], TypeEnum.Sprite,
       (sprite) => {
         return sprite.spaceIsTransparent;
       }
     );
   }
-  
+
   setSpriteSpaceIsTransparent(value, spriteId) {
     return this._checkExistenceThenCallback(
-      spriteId || this._selectedIds[TypeEnum.Sprite], TypeEnum.Sprite, 
+      spriteId || this._selectedIds[TypeEnum.Sprite], TypeEnum.Sprite,
       (sprite) => {
         sprite.spaceIsTransparent = !!value;
-        
+
         this._markChanged(sprite);
       }
     );
@@ -593,44 +593,64 @@ export default class StateManager {
 
   getSpriteIgnoreLeadingSpaces(spriteId) {
     return this._checkExistenceThenCallback(
-      spriteId || this._selectedIds[TypeEnum.Sprite], TypeEnum.Sprite, 
+      spriteId || this._selectedIds[TypeEnum.Sprite], TypeEnum.Sprite,
       (sprite) => {
         return sprite.ignoreLeadingSpaces;
       }
     );
   }
-  
+
   setSpriteIgnoreLeadingSpaces(value, spriteId) {
     return this._checkExistenceThenCallback(
-      spriteId || this._selectedIds[TypeEnum.Sprite], TypeEnum.Sprite, 
+      spriteId || this._selectedIds[TypeEnum.Sprite], TypeEnum.Sprite,
       (sprite) => {
         sprite.ignoreLeadingSpaces = !!value;
-        
+
         this._markChanged(sprite);
       }
     );
   }
 
+  getSpriteCachedPosition(spriteId) {
+    return this._checkExistenceThenCallback(
+      spriteId || this._selectedIds[TypeEnum.Sprite], TypeEnum.Sprite,
+      (sprite) => {
+        return [...sprite.cachedPosition];
+      }
+    )
+  }
+
+  setSpriteCachedPosition([x, y, z], spriteId) {
+    return this._checkExistenceThenCallback(
+      spriteId || this._selectedIds[TypeEnum.Sprite], TypeEnum.Sprite,
+      (sprite) => {
+        sprite.cachedPosition[0] = x;
+        sprite.cachedPosition[1] = y;
+        sprite.cachedPosition[2] = z;
+      }
+    )
+  }
+
   getStyleProperty(propertyName, styleId) {
     return this._checkExistenceThenCallback(
-      styleId || this._selectedIds[TypeEnum.Style], TypeEnum.Style, 
+      styleId || this._selectedIds[TypeEnum.Style], TypeEnum.Style,
       (style) => {
         return style.properties[propertyName];
       }
     );
   }
-  
+
   setStyleProperty(propertyName, value, styleId) {
     return this._checkExistenceThenCallback(
-      styleId || this._selectedIds[TypeEnum.Style], TypeEnum.Style, 
+      styleId || this._selectedIds[TypeEnum.Style], TypeEnum.Style,
       (style) => {
         style.setProperty(propertyName, value);
-        
+
         this._markChanged(style);
       }
     );
   }
-  
+
   _checkExistenceThenCallback(id, type, callback) {
     if (!(id in this._objects) || this._objects[id].type !== type) {
       Log.warn("No valid objects found.");

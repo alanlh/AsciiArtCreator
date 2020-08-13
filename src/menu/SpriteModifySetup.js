@@ -14,29 +14,52 @@ let spriteEditor = undefined;
 export function setupSpriteModify(stateManager, ae) {
     Funcs.addClickListener("spriteModifyButton", (event) => {
         if (spriteEditor) {
-            let text = spriteEditor.getText();
-            stateManager.setSpriteText(text, spriteEditor.getSpriteId());
+            let {
+                id, text, position
+            } = spriteEditor.compile();
+            stateManager.setSpriteText(text, id);
+            stateManager.setSpriteCachedPosition(position, id);
             ae.getSystemManager().removeSystem(spriteEditor.name);
+            spriteEditor = undefined;
         }
         stateManager.toggleSpriteBeingModified();
         let currentlyModifiedSprite = stateManager.getSpriteBeingModified();
         if (currentlyModifiedSprite) {
+            let cachedPosition = stateManager.getSpriteCachedPosition(currentlyModifiedSprite);
             spriteEditor = new SpriteEditorSystem(
                 currentlyModifiedSprite,
                 stateManager.getSpriteText(currentlyModifiedSprite),
-                [0, 0, 0]
+                cachedPosition
             );
             ae.getSystemManager().addSystem(spriteEditor);
+            updateSpritePositionDisplay(cachedPosition);
         }
         let modifyButton = document.getElementById("spriteModifyButton");
-        let modifyMenu = document.getElementById("spritePositionControls");    
+        let modifyMenu = document.getElementById("spritePositionControls");
         if (currentlyModifiedSprite) {
             let nameOfModifiedSprite = stateManager.getName(currentlyModifiedSprite);
             modifyButton.textContent = `Save ${nameOfModifiedSprite}`;
             modifyMenu.style.display = "block";
         } else {
             modifyButton.textContent = "Modify Selected";
-            modifyMenu.style.display = "none";    
+            modifyMenu.style.display = "none";
         }
     });
+
+    Funcs.addTriggerButtonClickOnEnterListener("spriteXField", "updateSpritePositionButton");
+    Funcs.addTriggerButtonClickOnEnterListener("spriteYField", "updateSpritePositionButton");
+    Funcs.addTriggerButtonClickOnEnterListener("spriteZField", "updateSpritePositionButton");
+
+    Funcs.addClickListener("updateSpritePositionButton", (event) => {
+        let x = parseInt(document.getElementById("spriteXField").value);
+        let y = parseInt(document.getElementById("spriteYField").value);
+        let z = parseInt(document.getElementById("spriteZField").value);
+        spriteEditor.setSpritePosition(x, y, z);
+    });
+}
+
+function updateSpritePositionDisplay([x, y, z]) {
+    document.getElementById("spriteXField").value = x;
+    document.getElementById("spriteYField").value = y;
+    document.getElementById("spriteZField").value = z;
 }
