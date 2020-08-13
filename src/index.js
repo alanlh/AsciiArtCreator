@@ -10,29 +10,20 @@ import * as SpriteModifySetup from "./menu/SpriteModifySetup.js";
 
 import DisplayHandlerSystem from "./display/DisplayHandlerSystem.js";
 
-// import LoadingSystem from "./controllers/LoadingSystem.js";
-// import StyleChangeHandler from "./controllers/StyleChangeHandler.js";
-// 
-// import ArtHolderSystem from "./systems/ArtHolderSystem.js";
-// import DisplayHandlerSystem from "./display/DisplayHandlerSystem.js";
-// 
-// import TextCellComponent from "./components/TextCellComponent.js";
-// 
-// import AEObjectTracker from "./AEObjectTracker.js";
-// 
-// import TemplateOperations from "./database/Template.js";
-// import FrameOperations from "./database/Frame.js";
-// import FragmentOperations from "./database/Frame.js";
-// import SpriteOperations from "./database/Frame.js";
-// import StyleOperations from "./database/Frame.js";
-
 const engine = new AsciiEngine.Engine();
 
-async function main() {
+function main() {
+  document.getElementById("startAacButton").addEventListener("click", startAac);
+}
+
+async function startAac() {
   setupUI();
 
-  let width = 180;
-  let height = 60;
+  let width = parseInt(document.getElementById("screenWidthInput").value) || 120;
+  let height = parseInt(document.getElementById("screenHeightInput").value) || 60;
+
+  document.getElementById("setupPrompt").remove();
+  document.getElementById("displayContainer").style.display = "block";
 
   let agl = new AsciiEngine.GL.Instance("artCreator");
   agl.init(width, height);
@@ -75,16 +66,6 @@ async function main() {
 
   let displayHandler = new DisplayHandlerSystem();
   engine.getSystemManager().addSystem(displayHandler);
-  // let artHolder = new ArtHolderSystem();
-  // let loadingSystem = new LoadingSystem();
-  // let styleChangeHandler = new StyleChangeHandler();
-  // let objTracker = new AEObjectTracker();
-  // 
-  // engine.getSystemManager().addSystem(displayHandler);
-  // engine.getSystemManager().addSystem(artHolder);
-  // engine.getSystemManager().addSystem(loadingSystem);
-  // engine.getSystemManager().addSystem(styleChangeHandler);
-
   engine.startLoop(125);
 }
 

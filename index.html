@@ -7,14 +7,53 @@
 </head>
 
 <body>
-  <div id="displayContainer">
-    <div id="displayScreen">
-      <div id="artCreator"></div>
-    </div>
-    <div id="menuBuffer"></div>
-    <a id="download" class="fileIO" /></a>
+  <div id="setupPrompt">
+    <h1>
+      Welcome to the Ascii Art Creator.
+    </h1>
+
+    <p>
+      Please input the dimensions of the input screen.
+    </p>
+
+    <table>
+      <tr>
+        <td>
+          Width:
+        </td>
+        <td>
+          <input id="screenWidthInput" type="number" min="1" step="1" value="120" />
+        </td>
+        <td>
+          characters
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Height:
+        </td>
+        <td>
+          <input id="screenHeightInput" type="number" min="1" step="1" value="60" />
+        </td>
+        <td>
+          characters
+        </td>
+      </tr>
+    </table>
+
+    <button id="startAacButton" class="menuButton">Start</button>
   </div>
 
+  <table id="displayContainer">
+    <tr>
+      <td id="displayScreen">
+        <div id="artCreator"></div>
+      </td>
+      <td id="menuBuffer"></td>
+    </tr>
+  </table>
+
+  <a id="download" class="fileIO" /></a>
   <div id="menuScreen">
     <div id="menuHeader">
       <h1 id="title">

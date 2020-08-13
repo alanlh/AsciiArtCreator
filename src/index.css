@@ -1,9 +1,12 @@
+body {
+  background-color: rgb(232, 240, 240);
+}
+
 #displayContainer {
   left: 0; 
   top: 0;
-  display: inline-block;
-  float: left;
   white-space: nowrap;
+  display: none;
 }
 
 #displayScreen {
@@ -13,11 +16,16 @@
   margin-left: 2vw;
 }
 
+#artCreator {
+  border: 1px black solid;
+  background-color: white;
+}
+
 #menuBuffer {
   top: 0;
   right: 0;
   height: 100%;
-  width: 30vw;
+  width: 32vw;
   display: inline-block;
 }
 
@@ -90,10 +98,6 @@
   display: block;
   width: 100%;
   margin: 5px;
-}
-
-#templateViewBody {
-  
 }
 
 #spriteViewBody {
