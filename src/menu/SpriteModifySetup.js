@@ -46,16 +46,16 @@ export function setupSpriteModify(stateManager, ae) {
         }
     });
 
-    Funcs.addTriggerButtonClickOnEnterListener("spriteXField", "updateSpritePositionButton");
-    Funcs.addTriggerButtonClickOnEnterListener("spriteYField", "updateSpritePositionButton");
-    Funcs.addTriggerButtonClickOnEnterListener("spriteZField", "updateSpritePositionButton");
+    document.getElementById("spriteXField").addEventListener("change", handleSpritePositionChange);
+    document.getElementById("spriteYField").addEventListener("change", handleSpritePositionChange);
+    document.getElementById("spriteZField").addEventListener("change", handleSpritePositionChange);
+}
 
-    Funcs.addClickListener("updateSpritePositionButton", (event) => {
-        let x = parseInt(document.getElementById("spriteXField").value);
-        let y = parseInt(document.getElementById("spriteYField").value);
-        let z = parseInt(document.getElementById("spriteZField").value);
-        spriteEditor.setSpritePosition(x, y, z);
-    });
+function handleSpritePositionChange() {
+    let x = parseInt(document.getElementById("spriteXField").value);
+    let y = parseInt(document.getElementById("spriteYField").value);
+    let z = parseInt(document.getElementById("spriteZField").value);
+    spriteEditor.setSpritePosition(x, y, z);
 }
 
 function updateSpritePositionDisplay([x, y, z]) {

@@ -1,4 +1,4 @@
-import {TypeEnum, TypeConfig, SupportedStyles} from "../Config.js";
+import { TypeEnum, TypeConfig, SupportedStyles } from "../Config.js";
 import Funcs from "../utils/Funcs.js";
 
 import * as MenuFieldFuncs from "./MenuFieldUpdateFuncs.js";
@@ -12,44 +12,38 @@ const MenuSetup = {
     Funcs.addClickListener("templateDeleteButton", Funcs.callbackWithArgs(
       handleDelete, stateManager, TypeEnum.Template
     ));
-    
+
     Funcs.addTriggerButtonClickOnEnterListener(
       "templateNameField", "templateRenameButton"
     );
-    
+
     Funcs.addClickListener("templateRenameButton", Funcs.callbackWithArgs(
       handleRename, stateManager, TypeEnum.Template
     ));
-    
+
     document.getElementById("templateVisibleCheckbox").addEventListener("change", Funcs.callbackWithArgs(
       handleTemplateVisibilityChange, stateManager
     ));
-    
-    Funcs.addTriggerButtonClickOnEnterListener(
-      "templateXField", "templatePositionButton"
-    );
-    
-    Funcs.addTriggerButtonClickOnEnterListener(
-      "templateYField", "templatePositionButton"
-    );
 
-    Funcs.addTriggerButtonClickOnEnterListener(
-      "templateZField", "templatePositionButton"
-    );
-    
-    Funcs.addClickListener("templatePositionButton", Funcs.callbackWithArgs(
+    document.getElementById("templateXField").addEventListener("change", Funcs.callbackWithArgs(
       handleTemplatePositionChange, stateManager
     ));
-    
+    document.getElementById("templateYField").addEventListener("change", Funcs.callbackWithArgs(
+      handleTemplatePositionChange, stateManager
+    ));
+    document.getElementById("templateZField").addEventListener("change", Funcs.callbackWithArgs(
+      handleTemplatePositionChange, stateManager
+    ));
+
     MenuListFuncs.refreshList(stateManager, TypeEnum.Template);
     MenuFieldFuncs.refreshFields[TypeEnum.Template](stateManager);
   },
-  
+
   [TypeEnum.Frame]: function setupFrameFields(stateManager) {
     Funcs.addClickListener("frameNewButton", Funcs.callbackWithArgs(
       handleNew, stateManager, TypeEnum.Frame
     ));
-    
+
     Funcs.addClickListener("frameDeleteButton", Funcs.callbackWithArgs(
       handleDelete, stateManager, TypeEnum.Frame
     ));
@@ -65,52 +59,47 @@ const MenuSetup = {
     Funcs.addClickListener("frameActiveButton", Funcs.callbackWithArgs(
       handleFrameSetActive, stateManager
     ));
-    
+
     MenuListFuncs.refreshList(stateManager, TypeEnum.Frame);
     MenuFieldFuncs.refreshFields[TypeEnum.Frame](stateManager);
   },
-  
+
   [TypeEnum.Fragment]: function setupFragmentFields(stateManager) {
     Funcs.addClickListener("fragmentNewButton", Funcs.callbackWithArgs(
       handleNew, stateManager, TypeEnum.Fragment
     ));
-    
+
     Funcs.addClickListener("fragmentDeleteButton", Funcs.callbackWithArgs(
       handleDelete, stateManager, TypeEnum.Fragment
     ));
-    
+
     Funcs.addTriggerButtonClickOnEnterListener(
       "fragmentSpriteNameField", "fragmentChangeSpriteButton"
     );
-    
+
     Funcs.addClickListener("fragmentChangeSpriteButton", Funcs.callbackWithArgs(
       handleFragmentSpriteChange, stateManager
     ));
-    
+
     Funcs.addTriggerButtonClickOnEnterListener(
       "fragmentStyleNameField", "fragmentChangeStyleButton"
     );
-    
+
     Funcs.addClickListener("fragmentChangeStyleButton", Funcs.callbackWithArgs(
       handleFragmentStyleChange, stateManager
     ));
-    
-    Funcs.addTriggerButtonClickOnEnterListener(
-      "fragmentXField", "fragmentPositionButton"
-    );
-    
-    Funcs.addTriggerButtonClickOnEnterListener(
-      "fragmentYField", "fragmentPositionButton"
-    );
 
-    Funcs.addTriggerButtonClickOnEnterListener(
-      "fragmentZField", "fragmentPositionButton"
-    );
-    
-    Funcs.addClickListener("fragmentPositionButton", Funcs.callbackWithArgs(
+    document.getElementById("fragmentXField").addEventListener("change", Funcs.callbackWithArgs(
       handleFragmentPositionChange, stateManager
     ));
-    
+    document.getElementById("fragmentYField").addEventListener("change", Funcs.callbackWithArgs(
+      handleFragmentPositionChange, stateManager
+    ));
+    document.getElementById("fragmentZField").addEventListener("change", Funcs.callbackWithArgs(
+      handleFragmentPositionChange, stateManager
+    ));
+
+
     MenuListFuncs.refreshList(stateManager, TypeEnum.Fragment);
     MenuFieldFuncs.refreshFields[TypeEnum.Fragment](stateManager);
   },
@@ -119,78 +108,78 @@ const MenuSetup = {
     Funcs.addClickListener("spriteNewButton", Funcs.callbackWithArgs(
       handleNew, stateManager, TypeEnum.Sprite
     ));
-    
+
     Funcs.addClickListener("spriteDeleteButton", Funcs.callbackWithArgs(
       handleDelete, stateManager, TypeEnum.Sprite
     ));
-    
+
     Funcs.addTriggerButtonClickOnEnterListener(
       "spriteNameField", "spriteRenameButton"
     );
-    
+
     Funcs.addClickListener("spriteRenameButton", Funcs.callbackWithArgs(
       handleRename, stateManager, TypeEnum.Sprite
     ));
-    
+
     Funcs.addTriggerButtonClickOnEnterListener(
       "spriteReplaceBlankField", "spriteReplaceBlankButton"
     );
-    
+
     Funcs.addClickListener("spriteReplaceBlankButton", Funcs.callbackWithArgs(
       handleSpriteReplaceBlank, stateManager
     ));
-    
+
     Funcs.addClickListener("spriteIgnoreLeadingSpacesCheckbox", Funcs.callbackWithArgs(
       handleSpriteIgnoreLeadingSpaces, stateManager
     ));
-    
+
     Funcs.addClickListener("spriteSpaceIsTransparentCheckbox", Funcs.callbackWithArgs(
       handleSpriteSpaceIsTransparent, stateManager
     ));
-    
+
     MenuListFuncs.refreshList(stateManager, TypeEnum.Sprite);
     MenuFieldFuncs.refreshFields[TypeEnum.Sprite](stateManager);
   },
-  
+
   [TypeEnum.Style]: function setupStyleFields(stateManager) {
     Funcs.addClickListener("styleNewButton", Funcs.callbackWithArgs(
       handleNew, stateManager, TypeEnum.Style
     ));
-    
+
     Funcs.addClickListener("styleDeleteButton", Funcs.callbackWithArgs(
       handleDelete, stateManager, TypeEnum.Style
     ));
-    
+
     Funcs.addTriggerButtonClickOnEnterListener(
       "styleNameField", "styleRenameButton"
     );
-    
+
     Funcs.addClickListener("styleRenameButton", Funcs.callbackWithArgs(
       handleRename, stateManager, TypeEnum.Style
     ));
-    
+
     let styleFormContainer = document.getElementById("styleUpdateFormFields");
-    
+
     for (let styleType in SupportedStyles) {
       let styleId = SupportedStyles[styleType].id;
-      
+
       let domElement = document.createElement("div");
       domElement.classList.add("styleOption");
-      
+
       let label = document.createElement("label");
       label.textContent = SupportedStyles[styleType].label;
       label.htmlFor = SupportedStyles[styleType].key;
       domElement.appendChild(label);
-      
+
       let input = document.createElement("input");
       input.setAttribute("name", SupportedStyles[styleType].key)
       input.setAttribute("type", "text");
       input.style.display = "block";
       input.id = SupportedStyles[styleType].id;
       domElement.appendChild(input);
-      
+
       styleFormContainer.appendChild(domElement);
-      
+
       Funcs.addTriggerButtonClickOnEnterListener(
         styleId, "styleUpdateButton"
       );
@@ -199,7 +188,7 @@ const MenuSetup = {
     Funcs.addClickListener("styleUpdateButton", Funcs.callbackWithArgs(
       handleStyleModify, stateManager
     ));
-    
+
     MenuListFuncs.refreshList(stateManager, TypeEnum.Style);
     MenuFieldFuncs.refreshFields[TypeEnum.Style](stateManager);
   },
@@ -258,7 +247,7 @@ function handleTemplateVisibilityChange(stateManager) {
   let checked = document.getElementById("templateVisibleCheckbox").checked;
   stateManager.setTemplateVisibility(checked);
   MenuFieldFuncs.refreshFields[TypeEnum.Template](stateManager);
-  MenuListFuncs.refreshListItemUsed(stateManager, 
+  MenuListFuncs.refreshListItemUsed(stateManager,
     stateManager.getSelectedId(TypeEnum.Template));
 }
 
@@ -290,7 +279,7 @@ function handleFragmentSpriteChange(stateManager) {
   let spriteName = document.getElementById("fragmentSpriteNameField").value || undefined;
   stateManager.setFragmentSprite(spriteName);
   MenuFieldFuncs.refreshFields[TypeEnum.Fragment](stateManager);
-  MenuListFuncs.populateListItemAttributes(stateManager, 
+  MenuListFuncs.populateListItemAttributes(stateManager,
     stateManager.getSelectedId(TypeEnum.Fragment));
   MenuListFuncs.refreshList(stateManager, TypeEnum.Sprite);
 }
@@ -299,7 +288,7 @@ function handleFragmentStyleChange(stateManager) {
   let styleName = document.getElementById("fragmentStyleNameField").value || undefined;
   stateManager.setFragmentStyle(styleName);
   MenuFieldFuncs.refreshFields[TypeEnum.Fragment](stateManager);
-  MenuListFuncs.populateListItemAttributes(stateManager, 
+  MenuListFuncs.populateListItemAttributes(stateManager,
     stateManager.getSelectedId(TypeEnum.Fragment));
   MenuListFuncs.refreshList(stateManager, TypeEnum.Style);
 }
@@ -309,7 +298,7 @@ function handleFragmentPositionChange(stateManager) {
   let y = parseInt(document.getElementById("fragmentYField").value);
   let z = parseInt(document.getElementById("fragmentZField").value);
   stateManager.setFragmentPosition([x, y, z]);
-  MenuListFuncs.refreshListItemName(stateManager, 
+  MenuListFuncs.refreshListItemName(stateManager,
     stateManager.getSelectedId(TypeEnum.Fragment));
   MenuFieldFuncs.refreshFields[TypeEnum.Fragment](stateManager);
 }
