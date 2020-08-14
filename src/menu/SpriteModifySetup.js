@@ -40,6 +40,7 @@ export function setupSpriteModify(stateManager, ae) {
             let nameOfModifiedSprite = stateManager.getName(currentlyModifiedSprite);
             modifyButton.textContent = `Save ${nameOfModifiedSprite}`;
             modifyMenu.style.display = "block";
+            modifyButton.blur();
         } else {
             modifyButton.textContent = "Modify Selected";
             modifyMenu.style.display = "none";
