@@ -32,8 +32,8 @@ async function startAac() {
   let asciiMouseInput = new AsciiEngine.Modules.AsciiMouseInput(agl);
   let resourceManager = new AsciiEngine.Modules.ResourceManager();
 
-  engine.setModule(AsciiEngine.Engine.ModuleSlots.Graphics, agl);
-  engine.setModule(AsciiEngine.Engine.ModuleSlots.ResourceManager, resourceManager);
+  engine.setModule(AsciiEngine.ModuleSlots.Graphics, agl);
+  engine.setModule(AsciiEngine.ModuleSlots.ResourceManager, resourceManager);
   engine.setModule("KeyboardInput", keyboardInput);
   engine.setModule("MouseInput", asciiMouseInput);
 

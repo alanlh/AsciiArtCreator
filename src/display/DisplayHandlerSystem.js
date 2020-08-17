@@ -165,7 +165,7 @@ export default class DisplayHandlerSystem extends AsciiEngine.System {
   }
   
   getResourceManager() {
-    return this.getEngine().getModule(AsciiEngine.Engine.ModuleSlots.ResourceManager);
+    return this.getEngine().getModule(AsciiEngine.ModuleSlots.ResourceManager);
   }
   
   getStateManager() {

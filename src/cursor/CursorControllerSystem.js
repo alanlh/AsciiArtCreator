@@ -12,7 +12,7 @@ export default class CursorControllerSystem extends AsciiEngine.System {
   }
 
   startup() {
-    let resourceManager = this.getEngine().getModule(AsciiEngine.Engine.ModuleSlots.ResourceManager);
+    let resourceManager = this.getEngine().getModule(AsciiEngine.ModuleSlots.ResourceManager);
     let screenWidth = resourceManager.get("_#_#_screen-width");
     let screenHeight = resourceManager.get("_#_#_screen-height");
 

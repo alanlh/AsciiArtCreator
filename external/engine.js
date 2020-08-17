@@ -649,7 +649,7 @@ var AsciiEngine = (function () {
     init(systemManager) {
       this._systemManager = systemManager;
       // TODO: Remove? Prevent direct access to EntityManager?
-      this._engine = systemManager.engine;
+      this._engine = systemManager.getEngine();
       // This should only be accessed in order to directly modify an Entity, rather than component data.
       this._entityManager = this._engine.getEntityManager();
       this.getSystemManager().getMessageBoard().signup(this.name, this.getMessageReceiver());
@@ -671,6 +671,10 @@ var AsciiEngine = (function () {
     
     getEngine() {
       return this._engine;
+    }
+
+    getEntityManager() {
+      return this._entityManager;
     }
     
     getMessageReceiver() {
@@ -878,11 +882,137 @@ var AsciiEngine = (function () {
     }
   }
 
+  /**
+     * A map but with sorted keys.
+     * @template K Key type
+     * @template V Value Type
+   */
+  class OrderedMultiMap {
+    /**
+     * Creates an OrderedMultiMap instance.
+     * @param {function(K, K) => number} comparator A comparator for two keys
+     */
+    constructor(comparator) {
+      /**
+       * @type {Map.<K, Set<V>>}
+       * @private
+       */
+      this._data = new Map();
+      /**
+       * @type {K[]}
+       * @private
+       */
+      this._sortedKeys = [];
+
+      this._comparator = comparator;
+    }
+
+    /**
+     * Checks if the key and value appear in this collection.
+     * If value is not specified, only searches for the key.
+     * @param {K} key The key to search for
+     * @param {V?} value The value to search for (optional)
+     * @returns {boolean}
+     */
+    has(key, value) {
+      return this._data.has(key) && (value === undefined || this._data.get(key).has(value));
+    }
+
+    /**
+     * Iterates over all values corresponding to the given key
+     * @param {K} key The key whose values to iterate over
+     */
+    *getIt(key) {
+      if (!this.has(key)) {
+        return;
+      }
+      for (let value of this._data.get(key)) {
+        yield value;
+      }
+    }
+
+    /**
+     * Returns all values corresponding to a key
+     * @param {K} key The key whose values to get
+     * @returns {Set<V>} The set of values, or an empty set.
+     */
+    get(key) {
+      let vals = new Set();
+      for (let val of this.getIt()) {
+        vals.add(val);
+      }
+      return val;
+    }
+
+    /**
+     * @generator
+     * @yields {V}
+     */
+    *[Symbol.iterator]() {
+      for (let sortedKey of this._sortedKeys) {
+        for (let value of this._data.get(sortedKey)) {
+          yield value;
+        }
+      }
+    }
+
+    /**
+     * Adds a new key/value to the multimap.
+     * @param {K} key The key to insert
+     * @param {V} value The value to insert
+     */
+    add(key, value) {
+      if (!this._data.has(key)) {
+        this._data.set(key, new Set());
+        // TODO: OPTIMIZE
+        this._sortedKeys.push(key);
+        this._sortedKeys.sort(this._comparator);
+      }
+      this._data.get(key).add(value);
+    }
+
+    /**
+     * Removes a value from the map.
+     * @param {K} key The key for the value to remove
+     * @param {V} value The value to remove
+     */
+    delete(key, value) {
+      if (!this._data.has(key)) {
+        return;
+      }
+      this._data.get(key).delete(value);
+      if (this._data.get(key).size === 0) {
+        this._data.delete(key);
+        // TODO: Optimize
+        this._sortedKeys.splice(this._sortedKeys.indexOf(key), 1);
+      }
+    }
+  }
+
+  OrderedMultiMap.NumericComparator = (n1, n2) => {
+    return n1 - n2;
+  };
+
   class SystemManager {
+    /**
+     * Creates a new SystemManager
+     * @param {Engine} engine The engine for reference
+     */
     constructor(engine) {
       this._engine = engine;
       
+      /**
+       * @type {OrderedMultiMap<number, System>}
+       */
+      this._activeSystems = new OrderedMultiMap();
+      /**
+       * @type {Object.<string, System>}
+       */
       this._systems = {};
+      /**
+       * @type {Object.<string, number>}
+       */
+      this._systemPriorities = {};
       
       this._messageBoard = new MessageBoard();
     }
@@ -902,7 +1032,8 @@ var AsciiEngine = (function () {
      */
     processEntityOperations() {
       let operations = this._engine.getEntityManager().requestEntityChanges();
-      for (let system of this) {
+      for (let systemName in this._systems) {
+        let system = this._systems[systemName];
         for (let entity of operations.added) {
           if (system.check(entity)) {
             system.add(entity);
@@ -939,7 +1070,7 @@ var AsciiEngine = (function () {
       this._engine.getEntityManager().markEntityChangesAsHandled();
     }
     
-    get engine() {
+    getEngine() {
       return this._engine;
     }
     
@@ -947,30 +1078,30 @@ var AsciiEngine = (function () {
      * Iterates over all active systems in the order they should be processed in.
      */ 
     *[Symbol.iterator]() {
-      // Return in order of priority.
-      for (let systemName in this._systems) {
-        let system = this._systems[systemName];
-        if (system.active) {
-          yield system;
-        }
+      for (let system of this._activeSystems) {
+        yield system;
       }
     }
     
     // ---------- PUBLIC API ---------- //
     
     /**
-     * Adds a system to the SystemManager.
+     * Adds a system to the SystemManager. 
+     * The default priority is 0.
+     * By default, the system is added immediately. (DELAY NOT IMPLEMENTED)
      * 
      * @param {System} system The system to add
+     * @param {number} priority The priority of the system. Lower priorities are run first.
      * @param {Boolean} delay If true, the System is guaranteed to not run until the next cycle.
      */
-    addSystem(system, delay) {
-      // TODO: Implement priority.
+    addSystem(system, priority, delay) {
+      priority = priority || 0;
       this._systems[system.name] = system;
+      this._activeSystems.add(priority, system);
       system.init(this);
       
       // If the game has already started, then all existing entities need to be registered with the system.
-      let entityManager = this.engine.getEntityManager();
+      let entityManager = this.getEngine().getEntityManager();
       for (let entity of entityManager.entities) {
         if (system.check(entity)) {
           system.add(entity);
@@ -986,8 +1117,13 @@ var AsciiEngine = (function () {
      */
     removeSystem(name, delay) {
       if (name in this._systems) {
-        this._systems[name].destroy();
+        let system = this._systems[name];
+        if (this._systems[name].active) {
+          let priority = this._systemPriorities[name];
+          this._activeSystems.delete(priority, system);
+        }
         delete this._systems[name];
+        system.destroy();
       }
     }
     
@@ -1002,7 +1138,9 @@ var AsciiEngine = (function () {
       // TODO: Give the option to delay this from taking effect until the next cycle.
       // TODO: Make this a configuration setting.
       if (name in this._systems) {
-        this._systems[name].enable();
+        let system = this._systems[name];
+        system.enable();
+        this._activeSystems.add(this._systemPriorities[name], system);
         return true;
       }
       return false;
@@ -1019,7 +1157,9 @@ var AsciiEngine = (function () {
       // TODO: Give the option to delay this from taking effect until the next cycle.
       // TODO: Make this a configuration setting.
       if (name in this._systems) {
-        this._systems[name].disable();
+        let system = this._systems[name];
+        system.disable();
+        this._activeSystems.delete(this._systemPriorities[name], system);
         return true;
       }
       return false;
@@ -1039,94 +1179,98 @@ var AsciiEngine = (function () {
      */
     constructor(config) {
       this._initialized = false;
-      
+
       this._entityManager = new EntityManager(this);
-      
+
       this._systemManager = new SystemManager(this);
-      
+
       this._modules = {};
-      
+
       this._millisecPerUpdate = 1000; // Default to 1 FPS
       this._intervalKey = undefined;
       this._delta = 0;
     }
-    
+
+    /**
+     * @returns {EntityManager}
+     */
     getEntityManager() {
       return this._entityManager;
     }
-    
+
+    /**
+     * @returns {SystemManager}
+     */
     getSystemManager() {
       return this._systemManager;
     }
-    
+
     get modules() {
       return this._modules;
     }
-    
+
     setModule(type, module) {
       this.modules[type] = module;
     }
-    
+
     getModule(type) {
       return this.modules[type];
     }
-    
+
     /**
-     * TODO: Remove?
+     * Currently unused. TODO: Remove?
      */
     applyModuleConfig(config) {
       for (let type in this._modules) {
         this.modules[type].init(config);
       }
     }
-    
+
+    /**
+     * Returns whether or not the game loop is running.
+     * @returns {boolean}
+     */
     get running() {
       return this._intervalKey !== undefined;
     }
-    
+
     /**
-     * Starts the game loop.
-     * 
-     * @param {Number} updateRate Number of milliseconds between updates.
+     * Starts the game loop
+     * @param {number} updateRate Number of milliseconds between updates
      */
     startLoop(updateRate) {
       if (updateRate !== undefined) {
         this._millisecPerUpdate = updateRate;
       }
-      this._intervalKey = setInterval(() => {this.update();}, this._millisecPerUpdate);
+      this._intervalKey = setInterval(() => { this.update(); }, this._millisecPerUpdate);
     }
-    
+
     pauseLoop() {
       clearInterval(this._intervalKey);
       this._intervalKey = undefined;
     }
-    
+
     /**
      * Updates the game by one tick.
-     */ 
+     */
     update() {
       for (let system of this._systemManager) {
         system.preUpdate();
       }
-      
+
       for (let system of this._systemManager) {
         system.update();
       }
-      
+
       for (let system of this._systemManager) {
         system.postUpdate();
       }
-      
+
       // Update Entity/System Managers.
       this.getEntityManager().processEntityOperations();
       this.getSystemManager().processEntityOperations();
     }
   }
-
-  Engine.ModuleSlots = {
-    Graphics: Symbol("GraphicsLibrary"),
-    ResourceManager: Symbol("ResourceManager"),
-  };
 
   Object.freeze(Engine.Modules);
 
@@ -1283,6 +1427,11 @@ var AsciiEngine = (function () {
     }
   }
 
+  const ModuleSlots = {
+    Graphics: Symbol("GraphicsLibrary"),
+    ResourceManager: Symbol("ResourceManager"),
+  };
+
   class AsciiRenderSystem extends SetSystem {
     constructor(name) {
       super(name);
@@ -1292,7 +1441,7 @@ var AsciiEngine = (function () {
     }
     
     startup() {
-      this._asciiGl = this.getEngine().getModule(Engine.ModuleSlots.Graphics);
+      this._asciiGl = this.getEngine().getModule(ModuleSlots.Graphics);
     }
     
     check(entity) {
@@ -1306,7 +1455,7 @@ var AsciiEngine = (function () {
      * Only render after the main loop.
      */
     postUpdate() {
-      let resourceManager = this.getEngine().getModule(Engine.ModuleSlots.ResourceManager);
+      let resourceManager = this.getEngine().getModule(ModuleSlots.ResourceManager);
       
       for (let entity of this.entities) {
         let renderComponent = entity.getComponent(AsciiRenderComponent.type) || entity.getComponent(AsciiAnimateComponent.type);
@@ -1420,7 +1569,20 @@ var AsciiEngine = (function () {
     KEY_UP: "keyup",
   };
 
+  /**
+   * @typedef {{
+   * setAsBlank?: string,
+   * spaceIsTransparent?: boolean,
+   * ignoreLeadingSpaces?: boolean,
+   * spaceHasFormatting?: boolean,
+   * }} SpriteSettings
+   */
   class Sprite {
+    /**
+     * Creates a new Sprite that can be used by AsciiGL.
+     * @param {string} text The text which the sprite is composed of
+     * @param {SpriteSettings} settings Controls how the sprite is displayed
+     */
     constructor(text, settings) {
       // TODO: Verify text.
       text = text || "";
@@ -1433,25 +1595,27 @@ var AsciiEngine = (function () {
       this._height = 1;
       
       let visibleCharFound = false;
-      let i = 0;
+      let textIdx = 0;
       if (text[0] === '\n') {
         // Ignore the first character if it is a newline.
-        i = 1;
+        textIdx = 1;
       }
-      this._rowIndices.push(i);
-      for (; i < text.length; i ++) {
-        if (text[i] === '\n') {
-          if (i - this._rowIndices[this._rowIndices.length - 1] > this._width) {
-            this._width = Math.max(this._width, i - this._rowIndices[this._rowIndices.length - 1]);
+      this._rowIndices.push(textIdx);
+      this._firstVisibleChar.push(undefined);
+      for (; textIdx < text.length; textIdx ++) {
+        if (text[textIdx] === '\n') {
+          if (textIdx - this._rowIndices[this._rowIndices.length - 1] > this._width) {
+            this._width = Math.max(this._width, textIdx - this._rowIndices[this._rowIndices.length - 1]);
           }
-          this._rowIndices.push(i + 1);
+          this._rowIndices.push(textIdx + 1);
+          this._firstVisibleChar.push(undefined);
           visibleCharFound = false;
-        } else if (!visibleCharFound && text[i] !== ' ') {
+        } else if (!visibleCharFound && text[textIdx] !== ' ') {
           visibleCharFound = true;
-          this._firstVisibleChar.push(i);
+          this._firstVisibleChar[this._firstVisibleChar.length - 1] = textIdx;
         }
         // TODO: Handle any other bad characters (\t, \b, etc.)
-        if (i > 1 && text[i - 1] === '\n') {
+        if (textIdx > 1 && text[textIdx - 1] === '\n') {
           this._height ++;
         }
       }
@@ -1474,7 +1638,7 @@ var AsciiEngine = (function () {
       this._ignoreLeadingSpaces = true;
       // If ignoreLeadingSpaces is true but spaceIsTransparent is false, leading spaces are still ignored.
       // i.e. ignoreLeadingSpaces takes precedence. 
-      
+      this._spaceHasFormatting = false;
       
       if ("setAsBlank" in settings) {
         this._setAsBlank = settings.setAsBlank;
@@ -1487,6 +1651,10 @@ var AsciiEngine = (function () {
       
       if ("ignoreLeadingSpaces" in settings) {
         this._ignoreLeadingSpaces = settings.ignoreLeadingSpaces;
+      }
+
+      if ("spaceHasFormatting" in settings) {
+        this._spaceHasFormatting = settings.spaceHasFormatting;
       }
       
       Object.freeze(this);
@@ -1519,6 +1687,43 @@ var AsciiEngine = (function () {
       return this._ignoreLeadingSpaces;
     }
     
+    get spaceHasFormatting() {
+      return this._spaceHasFormatting;
+    }
+
+    *getIt(left, right, top, bottom) {
+      let minX = Math.max(left, 0);
+      let maxX = math.min(right, this.width);
+      let minY = Math.max(top, 0);
+      let maxY = Math.min(bottom, this.height);
+
+      if (top >= this.height || bottom < 0) {
+        // The sprite is above or below the screen, respectively;
+        return;
+      }
+
+      for (let y = minY; y < maxY; y++) {
+        if (this._firstVisibleChar[y] === undefined) {
+          continue;
+        }
+        let x = this.ignoreLeadingSpaces ? this._firstVisibleChar[y] : 0;
+        let rowStart = this._rowIndices[y];
+        let rowEnd = this._rowIndices[y + 1] - 1; // Subtract 1 because last character is a new line.
+        let rowLength = rowEnd - rowStart;
+        if (left >= rowStart + rowLength || right < x) {
+          // This row is to the right or left of the screen, respectively.
+          continue;
+        }
+        if (this._rowIndices[y + 1] - 1 - rowStart <= minX) ;
+        let rowStartIdx = this._rowIndices[y];
+        while (x < maxX) {
+          let charIdx = rowStartIdx + x;
+          if (this.ignoreLeadingSpaces && charIdx < this._firstVisibleChar[y]) ;
+
+        }
+      }
+    }
+
     /**
      * Returns the character at the specified location.
      * If the location is invalid or transparent, returns the empty string.
@@ -1532,6 +1737,9 @@ var AsciiEngine = (function () {
       }
       
       let rowStart = this._rowIndices[y];
+      if (rowStart === undefined) {
+        return "";
+      }
       let nextRow = this._rowIndices[y + 1];
       if (x + rowStart + 1 >= nextRow) {
         return "";
@@ -2577,6 +2785,7 @@ var AsciiEngine = (function () {
     System: System,
     Systems: DefaultSystems,
     Modules: Modules,
+    ModuleSlots: ModuleSlots,
     GL: AsciiGL,
     Utility: Utility,
   };
