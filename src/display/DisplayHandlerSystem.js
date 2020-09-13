@@ -1,3 +1,5 @@
+import AsciiEngine from "../../external/engine.js";
+
 import StateManager from "../state_management/StateManager.js";
 
 import {TypeEnum, SupportedStyles} from "../Config.js";
@@ -144,7 +146,7 @@ export default class DisplayHandlerSystem extends AsciiEngine.System {
         this.styles[id] = styleName;
       }
       
-      let style = new AsciiEngine.GL.SpriteStyle();
+      let style = new AsciiEngine.GL.Style();
       
       for (let styleType in SupportedStyles) {
         let styleKey = SupportedStyles[styleType].key;

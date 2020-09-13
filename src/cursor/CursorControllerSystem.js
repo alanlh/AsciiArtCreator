@@ -1,3 +1,5 @@
+import AsciiEngine from "../../external/engine.js";
+
 import CursorComponent from "./CursorComponent.js";
 import BlinkerComponent from "./BlinkerComponent.js";
 
@@ -26,40 +28,14 @@ export default class CursorControllerSystem extends AsciiEngine.System {
 
     this.getEngine().getEntityManager().requestAddEntity(this.cursorEntity);
 
-    let keyboardInputModule = this.getEngine().getModule("KeyboardInput");
-    keyboardInputModule.signup(this.name, this.getMessageReceiver());
-    keyboardInputModule.subscribe(this.name, "ArrowDown", ["keydown"]);
-    keyboardInputModule.subscribe(this.name, "ArrowUp", ["keydown"]);
-    keyboardInputModule.subscribe(this.name, "ArrowLeft", ["keydown"]);
-    keyboardInputModule.subscribe(this.name, "ArrowRight", ["keydown"]);
-    keyboardInputModule.subscribe(this.name, "Backspace", ["keydown"]);
-    keyboardInputModule.subscribe(this.name, "Enter", ["keydown"]);
+    this.subscribe(["KeyboardEvent", undefined, "keydown", "Arrow"], this._handleArrow, true);
+    this.subscribe(["KeyboardEvent", undefined, "keydown", "Backspace"], this._handleBackspace, true);
+    this.subscribe(["KeyboardEvent", undefined, "keydown", "Enter"], this._handleEnter, true);
 
-    let mouseInputModule = this.getEngine().getModule("MouseInput");
-    mouseInputModule.signup(this.name, this.getMessageReceiver());
-    mouseInputModule.subscribe(this.name, mouseInputModule.GLOBAL, ["click"]);
+    this.subscribe(["MouseEvent", undefined, "click"], this._handleClick, true);
 
     let blinkerSystem = new BlinkerSystem();
     this.getSystemManager().addSystem(blinkerSystem);
-  }
-
-  shutdown() {
-    this.getEngine().getEntityManager().requestDeleteEntity(this.cursorEntity);
-    let mouseInputModule = this.getEngine().getModule("MouseInput");
-    mouseInputModule.withdraw(this.name);
-
-    let keyboardInputModule = this.getEngine().getModule("KeyboardInput");
-    keyboardInputModule.withdraw(this.name);
-  }
-
-  preUpdate() {
-
-  }
-
-  update() {
-    // Because AE currently doesn't support system ordering, 
-    // need to handle in update() so that SpriteEditorSystem is processed first. 
-    this.getMessageReceiver().handleAll();
   }
 
   postUpdate() {
@@ -68,21 +44,27 @@ export default class CursorControllerSystem extends AsciiEngine.System {
     positionComponent.y = this.cursorComponent.y;
   }
 
-  receiveMessage(source, tag, body) {
-    if (source === "click") {
-      this.cursorComponent.setPosition(body.coords.x, body.coords.y);
-    } else if (source === "keydown") {
-      if (tag === "ArrowDown") {
-        this.cursorComponent.shiftPosition(0, 1);
-      } else if (tag === "ArrowUp") {
-        this.cursorComponent.shiftPosition(0, -1);
-      } else if (tag === "ArrowRight") {
-        this.cursorComponent.shiftPosition(1, 0);
-      } else if (tag === "ArrowLeft") {
-        this.cursorComponent.shiftPosition(-1, 0);
-      } else if (tag === "Enter") {
-        this.cursorComponent.shiftPosition(Number.NEGATIVE_INFINITY, 1);
-      }
+  _handleArrow(body) {
+    if (body.event.key === "ArrowDown") {
+      this.cursorComponent.shiftPosition(0, 1);
+    } else if (body.event.key === "ArrowUp") {
+      this.cursorComponent.shiftPosition(0, -1);
+    } else if (body.event.key === "ArrowRight") {
+      this.cursorComponent.shiftPosition(1, 0);
+    } else if (body.event.key === "ArrowLeft") {
+      this.cursorComponent.shiftPosition(-1, 0);
     }
+  }
+
+  _handleBackspace(body) {
+    // ???
+  }
+
+  _handleEnter() {
+    this.cursorComponent.shiftPosition(Number.NEGATIVE_INFINITY, 1);
+  }
+
+  _handleClick(body) {
+    this.cursorComponent.setPosition(body.coords.x, body.coords.y);
   }
 }

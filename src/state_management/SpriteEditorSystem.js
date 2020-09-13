@@ -1,3 +1,5 @@
+import AsciiEngine from "../../external/engine.js";
+
 import CursorComponent from "../cursor/CursorComponent.js";
 
 export default class SpriteEditorSystem extends AsciiEngine.System {
@@ -30,10 +32,10 @@ export default class SpriteEditorSystem extends AsciiEngine.System {
   }
 
   startup() {
-    let keyboardInput = this.getKeyboardInputModule();
-    keyboardInput.signup(this.name, this.getMessageReceiver());
-
-    keyboardInput.subscribe(this.name, keyboardInput.ALL, ["keydown"]);
+    this.subscribe(["KeyboardEvent", undefined, "keydown", "Visible"],
+      this.handleCharInsertion, true);
+    this.subscribe(["KeyboardEvent", undefined, "keydown", "Backspace"],
+      this.handleBackspace, true);
 
     let resourceManager = this.getResourceManager();
     this.width = resourceManager.get("_#_#_screen-width");
@@ -64,9 +66,6 @@ export default class SpriteEditorSystem extends AsciiEngine.System {
   }
 
   shutdown() {
-    let keyboardInput = this.getKeyboardInputModule();
-    keyboardInput.withdraw(this.name);
-
     let entityManager = this.getEngine().getEntityManager();
     entityManager.requestDeleteEntity(this.rootEntity);
   }
@@ -90,26 +89,8 @@ export default class SpriteEditorSystem extends AsciiEngine.System {
 
   }
 
-  preUpdate() {
-    this.getMessageReceiver().handleAll();
-  }
-
-  receiveMessage(source, tag, message) {
-    if (source === "keydown") {
-      if (message.key.length === 1) {
-        this.handleCharInsertion(message.key);
-      } else if (message.key === "Backspace") {
-        this.handleBackspace();
-      }
-    }
-  }
-
   getResourceManager() {
     return this.getEngine().getModule(AsciiEngine.ModuleSlots.ResourceManager);
-  }
-
-  getKeyboardInputModule() {
-    return this.getEngine().getModule("KeyboardInput");
   }
 
   getStateManager() {
@@ -147,7 +128,8 @@ export default class SpriteEditorSystem extends AsciiEngine.System {
     ];
   }
 
-  handleCharInsertion(char) {
+  handleCharInsertion(body) {
+    let char = body.event.key;
     this.writeCharAtRelPos(char, this.getCursorRelPosition());
     this.cursorComponent.increment();
   }

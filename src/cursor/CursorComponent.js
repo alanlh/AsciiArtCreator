@@ -1,3 +1,5 @@
+import AsciiEngine from "../../external/engine.js";
+
 export default class CursorComponent extends AsciiEngine.Component {
   constructor(minX, maxX, minY, maxY) {
     super();

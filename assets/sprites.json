@@ -9,6 +9,7 @@
     "_#_#_blankSprite": {
       "text": " ",
       "settings": {
+        "ignoreLeadingSpaces": false,
         "spaceIsTransparent": false
       }
     }

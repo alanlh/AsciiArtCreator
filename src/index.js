@@ -1,3 +1,5 @@
+import AsciiEngine from "../external/engine.js";
+
 import CursorControllerSystem from "./cursor/CursorControllerSystem.js";
 
 // State Management
@@ -29,13 +31,11 @@ async function startAac() {
   agl.init(width, height);
 
   let keyboardInput = new AsciiEngine.Modules.KeyboardInput();
-  let asciiMouseInput = new AsciiEngine.Modules.AsciiMouseInput(agl);
   let resourceManager = new AsciiEngine.Modules.ResourceManager();
 
   engine.setModule(AsciiEngine.ModuleSlots.Graphics, agl);
   engine.setModule(AsciiEngine.ModuleSlots.ResourceManager, resourceManager);
-  engine.setModule("KeyboardInput", keyboardInput);
-  engine.setModule("MouseInput", asciiMouseInput);
+  engine.setModule(AsciiEngine.ModuleSlots.KeyboardInput, keyboardInput);
 
   resourceManager.add("_#_#_screen-width", width);
   resourceManager.add("_#_#_screen-height", height);
@@ -52,6 +52,8 @@ async function startAac() {
   engine.getSystemManager().addSystem(cursorController);
   let asciiRender = new AsciiEngine.Systems.AsciiRender("AsciiRender");
   engine.getSystemManager().addSystem(asciiRender);
+  let asciiInput = new AsciiEngine.Systems.AsciiInputHandler();
+  engine.getSystemManager().addSystem(asciiInput);
 
   // State
   let stateManager = new StateManager();
