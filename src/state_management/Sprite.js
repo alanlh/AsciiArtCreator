@@ -10,6 +10,7 @@ export default class Sprite extends DataStructBase {
     this.setAsBlank = "";
     this.ignoreLeadingSpaces = true;
     this.spaceIsTransparent = true;
+    this.spaceHasFormatting = false;
 
     this.cachedPosition = [0, 0, 0];
 

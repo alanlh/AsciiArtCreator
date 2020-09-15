@@ -137,6 +137,10 @@ const MenuSetup = {
       handleSpriteSpaceIsTransparent, stateManager
     ));
 
+    Funcs.addClickListener("spriteSpaceHasFormattingCheckbox", Funcs.callbackWithArgs(
+      handleSpriteSpaceHasFormatting, stateManager
+    ));
+
     MenuListFuncs.refreshList(stateManager, TypeEnum.Sprite);
     MenuFieldFuncs.refreshFields[TypeEnum.Sprite](stateManager);
   },
@@ -320,6 +324,12 @@ function handleSpriteIgnoreLeadingSpaces(stateManager) {
 function handleSpriteSpaceIsTransparent(stateManager) {
   let checked = document.getElementById("spriteSpaceIsTransparentCheckbox").checked;
   stateManager.setSpriteSpaceIsTransparent(checked);
+  MenuFieldFuncs.refreshFields[TypeEnum.Sprite](stateManager);
+}
+
+function handleSpriteSpaceHasFormatting(stateManager) {
+  let checked = document.getElementById("spriteSpaceHasFormattingCheckbox").checked;
+  stateManager.setSpriteSpaceHasFormatting(checked);
   MenuFieldFuncs.refreshFields[TypeEnum.Sprite](stateManager);
 }
 

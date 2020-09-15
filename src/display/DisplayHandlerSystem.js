@@ -113,10 +113,12 @@ export default class DisplayHandlerSystem extends AsciiEngine.System {
       let setAsBlank = stateManager.getSpriteSetAsBlank(id);
       let spaceIsTransparent = stateManager.getSpriteSpaceIsTransparent(id);
       let ignoreLeadingSpaces = stateManager.getSpriteIgnoreLeadingSpaces(id);
+      let spaceHasFormatting = stateManager.getSpriteSpaceHasFormatting(id);
       let sprite = new AsciiEngine.GL.Sprite(text, {
         setAsBlank: setAsBlank,
         spaceIsTransparent: spaceIsTransparent,
         ignoreLeadingSpaces: ignoreLeadingSpaces,
+        spaceHasFormatting: spaceHasFormatting,
       });
       
       resourceManager.add(spriteName, sprite);

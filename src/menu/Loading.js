@@ -117,6 +117,10 @@ function insertSpriteJson(stateManager, sprites) {
       ? spriteSettings.spaceIsTransparent
       : SpriteOptions.spaceIsTransparent.default;
     stateManager.setSpriteSpaceIsTransparent(spaceIsTransparent, spriteId);
+    let spaceHasFormatting = ("spaceHasFormatting" in spriteSettings)
+      ? spriteSettings.spaceHasFormatting
+      : SpriteOptions.spaceHasFormatting.default;
+    stateManager.setSpriteSpaceHasFormatting(spaceHasFormatting, spriteId);
   }
 }
 
@@ -202,9 +206,11 @@ function downloadSprites(stateManager, downloadAll) {
       let setAsBlank = stateManager.getSpriteSetAsBlank(spriteId);
       let ignoreLeadingSpaces = stateManager.getSpriteIgnoreLeadingSpaces(spriteId);
       let spaceIsTransparent = stateManager.getSpriteSpaceIsTransparent(spriteId);
+      let spaceHasFormatting = stateManager.getSpriteSpaceHasFormatting(spriteId);
       let settings = {
         ignoreLeadingSpaces: ignoreLeadingSpaces,
         spaceIsTransparent: spaceIsTransparent,
+        spaceHasFormatting: spaceHasFormatting,
       };
       if (setAsBlank !== undefined) {
         settings.setAsBlank = setAsBlank;

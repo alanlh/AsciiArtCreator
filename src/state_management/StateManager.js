@@ -605,10 +605,28 @@ export default class StateManager {
       spriteId || this._selectedIds[TypeEnum.Sprite], TypeEnum.Sprite,
       (sprite) => {
         sprite.ignoreLeadingSpaces = !!value;
-
         this._markChanged(sprite);
       }
     );
+  }
+
+  getSpriteSpaceHasFormatting(spriteId) {
+    return this._checkExistenceThenCallback(
+      spriteId || this._selectedIds[TypeEnum.Sprite], TypeEnum.Sprite,
+      (sprite) => {
+        return sprite.spaceHasFormatting;
+      }
+    )
+  }
+
+  setSpriteSpaceHasFormatting(value, spriteId) {
+    return this._checkExistenceThenCallback(
+      spriteId || this._selectedIds[TypeEnum.Sprite], TypeEnum.Sprite,
+      (sprite) => {
+        sprite.spaceHasFormatting = !!value;
+        this._markChanged(sprite);
+      }
+    )
   }
 
   getSpriteCachedPosition(spriteId) {

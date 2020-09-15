@@ -104,6 +104,9 @@ const SpriteOptions = {
   },
   ignoreLeadingSpaces: {
     default: true,
+  },
+  spaceHasFormatting: {
+    default: false,
   }
 }
 

@@ -31,13 +31,15 @@ export let menuFieldPopulators = {
   [TypeEnum.Sprite]: function populateSpriteFields(params = {
     name: "",
     setAsBlank: "",
-    ignoreLeadingSpaces: false,
-    spaceIsTransparent: false,
+    ignoreLeadingSpaces: true,
+    spaceIsTransparent: true,
+    spaceHasFormatting: false,
   }) {
     document.getElementById("spriteNameField").value = params.name;
     document.getElementById("spriteReplaceBlankField").value = params.setAsBlank;
     document.getElementById("spriteIgnoreLeadingSpacesCheckbox").checked = params.ignoreLeadingSpaces;
     document.getElementById("spriteSpaceIsTransparentCheckbox").checked = params.spaceIsTransparent;
+    document.getElementById("spriteSpaceHasFormattingCheckbox").checked = params.spaceHasFormatting;
   },
   [TypeEnum.Style]: function populateStyleFields(params = {
     name: "",
@@ -93,6 +95,7 @@ export let refreshFields = {
       setAsBlank: stateManager.getSpriteSetAsBlank(selected) || "",
       ignoreLeadingSpaces: stateManager.getSpriteIgnoreLeadingSpaces(selected),
       spaceIsTransparent: stateManager.getSpriteSpaceIsTransparent(selected),
+      spaceHasFormatting: stateManager.getSpriteSpaceHasFormatting(selected),
     };
   }),
   [TypeEnum.Style]: createFieldRefresher(TypeEnum.Style, (stateManager, selected) => {
