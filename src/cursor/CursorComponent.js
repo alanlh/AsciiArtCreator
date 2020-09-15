@@ -11,6 +11,9 @@ export default class CursorComponent extends AsciiEngine.Component {
 
     this.x = minX;
     this.y = minY;
+
+    this.width = this.maxX - this.minX + 1;
+    this.height = this.maxY - this.minY + 1;
   }
 
   increment() {
@@ -41,8 +44,14 @@ export default class CursorComponent extends AsciiEngine.Component {
   }
 
   shiftPosition(x, y) {
-    this.x = this.minX + (this.x + x - this.minX) % (this.maxX - this.minX + 1);
-    this.y = this.minY + (this.y + y - this.minY) % (this.maxY - this.minY + 1);
+    let posX = this.x + x - this.minX; 
+    let posY = this.y + y - this.minY;
+    // Use the trick here to prevent negative mods.
+    // https://stackoverflow.com/questions/4467539/javascript-modulo-gives-a-negative-result-for-negative-numbers
+    posX = ((posX % this.width) + this.width) % this.width;
+    posY = ((posY % this.height) + this.height) % this.height;
+    this.x = this.minX + posX;
+    this.y = this.minY + posY;
   }
 
   shfitNewLine() {
