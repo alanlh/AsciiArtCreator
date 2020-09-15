@@ -5,6 +5,7 @@ export default class Template extends DataStructBase {
   constructor() {
     super();
 
+    this.name = undefined;
     this.framesById = {};
     this.framesByName = {};
     this.position = [0, 0, 0];

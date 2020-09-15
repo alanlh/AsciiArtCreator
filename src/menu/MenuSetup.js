@@ -12,6 +12,9 @@ const MenuSetup = {
     Funcs.addClickListener("templateDeleteButton", Funcs.callbackWithArgs(
       handleDelete, stateManager, TypeEnum.Template
     ));
+    Funcs.addClickListener("templateCopyButton", Funcs.callbackWithArgs(
+      handleCopy, stateManager, TypeEnum.Template
+    ));
 
     Funcs.addTriggerButtonClickOnEnterListener(
       "templateNameField", "templateRenameButton"
@@ -47,6 +50,9 @@ const MenuSetup = {
     Funcs.addClickListener("frameDeleteButton", Funcs.callbackWithArgs(
       handleDelete, stateManager, TypeEnum.Frame
     ));
+    Funcs.addClickListener("frameCopyButton", Funcs.callbackWithArgs(
+      handleCopy, stateManager, TypeEnum.Frame
+    ));
 
     Funcs.addTriggerButtonClickOnEnterListener(
       "frameNameField", "frameRenameButton"
@@ -71,6 +77,10 @@ const MenuSetup = {
 
     Funcs.addClickListener("fragmentDeleteButton", Funcs.callbackWithArgs(
       handleDelete, stateManager, TypeEnum.Fragment
+    ));
+
+    Funcs.addClickListener("fragmentCopyButton", Funcs.callbackWithArgs(
+      handleCopy, stateManager, TypeEnum.Fragment
     ));
 
     Funcs.addTriggerButtonClickOnEnterListener(
@@ -113,6 +123,10 @@ const MenuSetup = {
       handleDelete, stateManager, TypeEnum.Sprite
     ));
 
+    Funcs.addClickListener("spriteCopyButton", Funcs.callbackWithArgs(
+      handleCopy, stateManager, TypeEnum.Sprite
+    ));
+
     Funcs.addTriggerButtonClickOnEnterListener(
       "spriteNameField", "spriteRenameButton"
     );
@@ -152,6 +166,10 @@ const MenuSetup = {
 
     Funcs.addClickListener("styleDeleteButton", Funcs.callbackWithArgs(
       handleDelete, stateManager, TypeEnum.Style
+    ));
+
+    Funcs.addClickListener("styleCopyButton", Funcs.callbackWithArgs(
+      handleCopy, stateManager, TypeEnum.Style
     ));
 
     Funcs.addTriggerButtonClickOnEnterListener(
@@ -215,6 +233,14 @@ function handleNew(stateManager, type) {
   }
   MenuListFuncs.addListItem(stateManager, id);
   MenuListFuncs.handleClick(stateManager, id, type);
+}
+
+function handleCopy(stateManager, type) {
+  let id = stateManager.copy(type);
+  if (id === undefined) {
+    return;
+  }
+  MenuListFuncs.addListItem(stateManager, id);
 }
 
 function handleDelete(stateManager, type) {

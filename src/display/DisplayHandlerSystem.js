@@ -55,22 +55,21 @@ export default class DisplayHandlerSystem extends AsciiEngine.System {
       posComponent.x = pos[0];
       posComponent.y = pos[1];
       posComponent.z = pos[2];
-      let activeFrameId = stateManager.getTemplateActiveFrame(id);
-      if (!activeFrameId) {
-        return;
-      }
-      let fragIds = stateManager.getFrameFragmentIds(activeFrameId);
       let spriteNames = [];
       let styleNames = [];
       let positions = [];
-      for (let fragId of fragIds) {
-        let spriteName = stateManager.getFragmentSprite(fragId);
-        let styleName = stateManager.getFragmentStyle(fragId);
-        let position = stateManager.getFragmentPosition(fragId);
-        if (spriteName && styleName) {
-          spriteNames.push(spriteName);
-          styleNames.push(styleName);
-          positions.push([...position]);
+      let activeFrameId = stateManager.getTemplateActiveFrame(id);
+      if (activeFrameId) {
+        let fragIds = stateManager.getFrameFragmentIds(activeFrameId);
+        for (let fragId of fragIds) {
+          let spriteName = stateManager.getFragmentSprite(fragId);
+          let styleName = stateManager.getFragmentStyle(fragId);
+          let position = stateManager.getFragmentPosition(fragId);
+          if (spriteName && styleName) {
+            spriteNames.push(spriteName);
+            styleNames.push(styleName);
+            positions.push([...position]);
+          }
         }
       }
       // Deactivate the current renderComponent to prevent it from being shown.

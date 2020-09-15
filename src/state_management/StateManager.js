@@ -328,6 +328,132 @@ export default class StateManager {
     }
   }
 
+  copy(type, idToCopy) {
+    idToCopy = idToCopy || this._selectedIds[type];
+    if (idToCopy === undefined) {
+      Log.warn("No id selected");
+      return;
+    }
+    type = this.getType(idToCopy);
+
+    let oldObj = this._objects[idToCopy];
+    let newObj = new DataConstructors[type]();
+
+    if (TypeConfig[type].hasGlobalName) {
+      let newName = Funcs.getFreeName(oldObj.name, this._nameIndex);
+      this._nameIndex[newName] = newObj.id;
+      newObj.name = newName;
+    } else if (TypeConfig[type].hasLocalName) {
+      if (type === TypeEnum.Frame) {
+        let parentId = oldObj.parent;
+        let template = this._objects[parentId];
+        let newName = Funcs.getFreeName(oldObj.name, template.framesByName);
+        newObj.name = newName;
+        newObj.templateId = parentId;
+        template.addFrame(newObj);
+      }
+    }
+
+    if (type === TypeEnum.Fragment) {
+      this._objects[oldObj.frameId].addFragment(newObj.id);
+      newObj.templateId = oldObj.templateId;
+      newObj.frameId = oldObj.frameId;
+    }
+
+    this._objects[newObj.id] = newObj;
+    this._typeIndex[newObj.id] = type;
+    this._markChanged(newObj);
+
+    // Perform deep copies.
+    switch (type) {
+      case TypeEnum.Template:
+        this._copyTemplate(newObj, oldObj);
+        break;
+      case TypeEnum.Frame:
+        this._copyFrame(newObj, oldObj);
+        break;
+      case TypeEnum.Fragment:
+        this._copyFragment(newObj, oldObj);
+        break;
+      case TypeEnum.Sprite:
+        this._copySprite(newObj, oldObj);
+        break;
+      case TypeEnum.Style:
+        this._copyStyle(newObj, oldObj);
+        break;
+    }
+
+    return newObj.id;
+  }
+
+  _copyTemplate(newTemplate, oldTemplate) {
+    for (let id in oldTemplate.framesById) {
+      let oldFrame = this._objects[id];
+      let newFrame = new Frame();
+      newFrame.templateId = newTemplate.id;
+      newFrame.name = oldFrame.name;
+
+      this._objects[newFrame.id] = newFrame;
+      this._typeIndex[newFrame.id] = TypeEnum.Frame;
+      this._markChanged(newFrame);
+
+      this._copyFrame(newFrame, oldFrame);
+      newFrame.isActiveFrame = oldFrame.isActiveFrame;
+      if (newFrame.isActiveFrame) {
+        newTemplate.activeFrame = newFrame.id;
+      }
+      newTemplate.addFrame(newFrame);
+    }
+
+    newTemplate.position = [...oldTemplate.position];
+    newTemplate.visible = oldTemplate.visible;
+  }
+
+  _copyFrame(newFrame, oldFrame) {
+    for (let fragId of oldFrame.fragIds) {
+      let oldFrag = this._objects[fragId];
+      let newFrag = new Fragment();
+      newFrag.frameId = newFrame.id;
+      newFrag.templateId = newFrame.parent;
+      newFrame.addFragment(newFrag.id);
+
+      this._objects[newFrag.id] = newFrag;
+      this._typeIndex[newFrag.id] = TypeEnum.Fragment;
+      this._markChanged(newFrag);
+
+      this._copyFragment(newFrag, oldFrag);
+    }
+    newFrame.isActiveFrame = false;
+  }
+
+  _copyFragment(newFragment, oldFragment) {
+    let oldSprite = this.getFragmentSprite(oldFragment.id);
+    this.setFragmentSprite(oldSprite, newFragment.id);
+
+    let oldStyle = this.getFragmentStyle(oldFragment.id);
+    this.setFragmentStyle(oldStyle, newFragment.id);
+    
+    let oldPosition = this.getFragmentPosition(oldFragment.id);
+    this.setFragmentPosition(oldPosition, newFragment.id);
+  }
+
+  _copySprite(newSprite, oldSprite) {
+    newSprite.text = oldSprite.text;
+    newSprite.setAsBlank = oldSprite.setAsBlank;
+    newSprite.ignoreLeadingSpaces = oldSprite.ignoreLeadingSpaces;
+    newSprite.spaceIsTransparent = oldSprite.spaceIsTransparent;
+    newSprite.spaceHasFormatting = oldSprite.spaceHasFormatting;
+
+    newSprite.cachedPosition = [...oldSprite.cachedPosition];
+  }
+
+  _copyStyle(newStyle, oldStyle) {
+    for (let propType in SupportedStyles) {
+      let key = SupportedStyles[propType].key;
+      newStyle.properties[key] = oldStyle.properties[key];
+    }
+  }
+
   getTemplateVisibility(tempId) {
     return this._checkExistenceThenCallback(
       tempId || this._selectedIds[TypeEnum.Template], TypeEnum.Template,
