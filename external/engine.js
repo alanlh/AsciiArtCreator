@@ -830,7 +830,7 @@ class System {
  */
 class RootedSearchTreeNode {
   constructor() {
-    /** @type {Object.<string, RootedSearchTreeNode>} */
+    /** @type {Object.<string, RootedSearchTreeNode<T>>} */
     this.children = {};
     /** @type {Set<T>} */
     this.data = new Set();
@@ -1769,7 +1769,7 @@ class MapSystem extends System {
 
 const ModuleSlots = {
   Graphics: Symbol("GraphicsLibrary"),
-  ResourceManager: Symbol("ResourceManager"),
+  Resources: Symbol("ResourceManager"),
   KeyboardInput: Symbol("KeyboardInput"),
 };
 
@@ -1796,7 +1796,7 @@ class AsciiRenderSystem extends SetSystem {
    * Only render after the main loop.
    */
   postUpdate() {
-    let resourceManager = this.getEngine().getModule(ModuleSlots.ResourceManager);
+    let resourceManager = this.getEngine().getModule(ModuleSlots.Resources);
     
     for (let entity of this.entities) {
       let renderComponent = entity.getComponent(AsciiRenderComponent.type) || entity.getComponent(AsciiAnimateComponent.type);

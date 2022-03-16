@@ -34,7 +34,7 @@ async function startAac() {
   let resourceManager = new AsciiEngine.Modules.ResourceManager();
 
   engine.setModule(AsciiEngine.ModuleSlots.Graphics, agl);
-  engine.setModule(AsciiEngine.ModuleSlots.ResourceManager, resourceManager);
+  engine.setModule(AsciiEngine.ModuleSlots.Resources, resourceManager);
   engine.setModule(AsciiEngine.ModuleSlots.KeyboardInput, keyboardInput);
 
   resourceManager.add("_#_#_screen-width", width);

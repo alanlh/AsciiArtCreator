@@ -90,7 +90,7 @@ export default class SpriteEditorSystem extends AsciiEngine.System {
   }
 
   getResourceManager() {
-    return this.getEngine().getModule(AsciiEngine.ModuleSlots.ResourceManager);
+    return this.getEngine().getModule(AsciiEngine.ModuleSlots.Resources);
   }
 
   getStateManager() {

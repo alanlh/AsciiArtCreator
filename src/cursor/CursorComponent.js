@@ -55,7 +55,7 @@ export default class CursorComponent extends AsciiEngine.Component {
   }
 
   shfitNewLine() {
-    this.setPosition(Number.NEGATIVE_INFINITY, this.y);
+    this.setPosition(this.minX, this.y);
     this.shiftPosition(0, 1);
   }
 }
